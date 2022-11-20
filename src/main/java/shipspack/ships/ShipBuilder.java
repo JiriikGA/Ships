@@ -112,7 +112,7 @@ public class ShipBuilder extends ShipsController {
                     if ((currentCoordinates.x - 1 + j) <= row - 1 && (currentCoordinates.x - 1 + j) >= 0 && (currentCoordinates.y - 1 + g) <= row - 1 && (currentCoordinates.y - 1 + g) >= 0)
                     {
                         tempBlockedList.add(new coordinates(currentCoordinates.x - 1 + j, currentCoordinates.y - 1 + g));
-                        if (!AIon && false) {///////////////////////////////////////////
+                        if (AIon) {
                             /** indikator blokace */
                             Rectangle rect = new Rectangle(5, 5);
                             rect.setFill(Color.RED);
@@ -143,7 +143,7 @@ public class ShipBuilder extends ShipsController {
 
         tempShipPosition.add(thisShipCoords);
 
-        if (!AIon && false) {//////////////////////////////////////////
+        if (!AIon) {
             /** Vytvoreni spritu */
             String s = "ImgShip" + shipLength;
             if (!rotated) s += "R.png";
