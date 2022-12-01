@@ -12,16 +12,15 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("ShipBoard.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 900);
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("Menu&Settings.fxml"));
 
-        stage.setTitle("Ships (beta v0.1)");
+        Scene scene = new Scene(fxmlLoader.load(), 1520, 980);
+        stage.setTitle("Ships - Menu (beta v0.3)");
         stage.setScene(scene);
-        stage.show();
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
-
+        stage.show();
 
     }
 

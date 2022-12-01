@@ -112,7 +112,7 @@ public class ShipBuilder extends ShipsController {
                     if ((currentCoordinates.x - 1 + j) <= row - 1 && (currentCoordinates.x - 1 + j) >= 0 && (currentCoordinates.y - 1 + g) <= row - 1 && (currentCoordinates.y - 1 + g) >= 0)
                     {
                         tempBlockedList.add(new coordinates(currentCoordinates.x - 1 + j, currentCoordinates.y - 1 + g));
-                        if (AIon) {
+                        if (!AIon) {
                             /** indikator blokace */
                             Rectangle rect = new Rectangle(5, 5);
                             rect.setFill(Color.RED);

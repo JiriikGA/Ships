@@ -1,24 +1,31 @@
 package shipspack.ships;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
-
-import static java.lang.Integer.valueOf;
 
 public class ShipsController {
 
     @FXML
-    private GridPane grid;
+    public GridPane grid;
     @FXML
-    private GridPane enemyGrid;
+    public GridPane enemyGrid;
     @FXML
     private Label Ships1;
     @FXML
@@ -33,7 +40,18 @@ public class ShipsController {
     public Label Feedback;
     @FXML
     public Button RotateButton;
-
+    @FXML
+    public Button ModeButton;
+    @FXML
+    private Label Preview4;
+    @FXML
+    private Label Preview3;
+    @FXML
+    private Label Preview2;
+    @FXML
+    private Label Preview1;
+    @FXML
+    private Label Preview0;
 
     //testing
     ArrayList<Integer> testList = new ArrayList<>();
@@ -69,6 +87,9 @@ public class ShipsController {
     static int AIsunken = 0;
     static int PlayerSunken = 0;
     static int tempSunken = 0;
+    int selectedMode = 0;
+    static int totalShips = 0;
+    boolean firstStart = true;
 
     int gameMode = 0;
     int ships1 = 1;
@@ -77,71 +98,148 @@ public class ShipsController {
     int ships4 = 2;
     int ships5 = 1;
 
-    static int totalShips = 0;
+
+
+
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
+    public void ToGame(ActionEvent event) throws IOException {
+        System.out.println("Changing scene");
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ShipBoard.fxml")));
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+        stage.setTitle("Ships - Game (beta v0.3)");
+        stage.getIcons().add(new Image("Ships_ico.png"));
+        stage.setMaximized(false);
+        stage.resizableProperty().set(true);
+
+
+    }
+    public void ToMenu(ActionEvent event) throws IOException {
+        System.out.println("Changing scene");
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Menu&Settings.fxml")));
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+        stage.setTitle("Ships - Menu (beta v0.3)");
+        stage.getIcons().add(new Image("Ships_ico.png"));
+        stage.setMaximized(false);
+        stage.resizableProperty().set(true);
+    }
+
+    public void ToStats(ActionEvent event) throws IOException {
+        System.out.println("Changing scene");
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+@FXML
+public void modeControll()
+{
+
+    selectedMode++;
+    if(selectedMode > 5){selectedMode = 0;}
+    if(selectedMode == 0){gameMode = 0; ModeButton.setText("Herní mód: Flotila");}
+    if(selectedMode == 1){gameMode = 1; ModeButton.setText("Herní mód: Tradiční");}
+    if(selectedMode == 2){gameMode = 2; ModeButton.setText("Herní mód: Tradiční - M. Bradley");}
+    if(selectedMode == 3){gameMode = 3; ModeButton.setText("Herní mód: Ruská");}
+    if(selectedMode == 4){gameMode = 4; ModeButton.setText("Herní mód: Loterie");}
+    if(selectedMode == 5){gameMode = 5; ModeButton.setText("Herní mód: Vlastní");}
+
+
+    //Mody hry
+    // FLotila
+    if (gameMode == 0) {
+        ships1 = 0;
+        ships2 = 3;
+        ships3 = 1;
+        ships4 = 2;
+        ships5 = 1;
+    }
+
+    //Tradicni
+    if (gameMode == 1) {
+        ships1 = 2;
+        ships2 = 4;
+        ships3 = 2;
+        ships4 = 1;
+        ships5 = 0;
+    }
+
+    //tradicni M. Bradley 1990
+    if (gameMode == 2) {
+        ships1 = 0;
+        ships2 = 1;
+        ships3 = 1;
+        ships4 = 1;
+        ships5 = 1;
+    }
+
+    //Ruská
+    if (gameMode == 3) {
+        ships1 = 4;
+        ships2 = 3;
+        ships3 = 2;
+        ships4 = 1;
+        ships5 = 0;
+    }
+
+    //Loterie
+    if (gameMode == 4) {
+        ships1 = 1;
+        ships2 = 0;
+        ships3 = 0;
+        ships4 = 0;
+        ships5 = 0;
+    }
+
+    // test
+    if (gameMode == 5) {
+        ships1 = 0;
+        ships2 = 0;
+        ships3 = 0;
+        ships4 = 0;
+        ships5 = 5;
+    }
+
+
+
+    Preview0.setText(String.valueOf(ships1));
+    Preview1.setText(String.valueOf(ships2));
+    Preview2.setText(String.valueOf(ships3));
+    Preview3.setText(String.valueOf(ships4));
+    Preview4.setText(String.valueOf(ships5));
+
+}
+
+
+
+
 
 
     @FXML
     void firstStart() {
-        grid.setStyle("-fx-background-image: url('Water.png')");
+
+        if(firstStart){
+            firstStart = false;
+        }
+        else return;
+        //grid.setStyle("-fx-background-image: url('Water.png')");
 
         //test
         for (int i = 0; i < 14; i++) {
             testList.add(i,0);
-        }
-
-        //Mody hry
-        // FLotila
-        if (gameMode == 0) {
-            ships1 = 0;
-            ships2 = 3;
-            ships3 = 1;
-            ships4 = 2;
-            ships5 = 1;
-        }
-
-        //Tradicni
-        if (gameMode == 1) {
-            ships1 = 2;
-            ships2 = 4;
-            ships3 = 2;
-            ships4 = 1;
-            ships5 = 0;
-        }
-
-        //tradicni M. Bradley 1990
-        if (gameMode == 2) {
-            ships1 = 0;
-            ships2 = 1;
-            ships3 = 1;
-            ships4 = 1;
-            ships5 = 1;
-        }
-
-        //Ruská
-        if (gameMode == 3) {
-            ships1 = 4;
-            ships2 = 3;
-            ships3 = 2;
-            ships4 = 1;
-            ships5 = 0;
-        }
-
-        //Loterie
-        if (gameMode == 4) {
-            ships1 = 1;
-            ships2 = 0;
-            ships3 = 0;
-            ships4 = 0;
-            ships5 = 0;
-        }
-
-        // test
-        if (gameMode == 5) {
-            ships1 = 0;
-            ships2 = 0;
-            ships3 = 0;
-            ships4 = 0;
-            ships5 = 5;
         }
 
         totalShips = ships1 + 2 * ships2 + 3 * ships3 + 4 * ships4 + 5 * ships5;
@@ -225,6 +323,10 @@ public class ShipsController {
     void Start() {
 
 
+        //Rotate button CSS
+        if(rotated){RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");}
+        else RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+
         /** Nastavi pocet lodi*/
         shipNumberList.set(0, ships1);
         shipNumberList.set(1, ships2);
@@ -242,33 +344,40 @@ public class ShipsController {
 
     @FXML
     protected void Rotate() {
+        RotateButton.setText("");
         rotated = !rotated;
         System.out.println("rotated = " + rotated);
-        //RotateButton.
+        if(rotated){RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");}
+        else RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
     }
 
     @FXML
     protected void Ship1() {
+        firstStart();
         shipLength = 1;
     }
 
     @FXML
     protected void Ship2() {
+        firstStart();
         shipLength = 2;
     }
 
     @FXML
     protected void Ship3() {
+        firstStart();
         shipLength = 3;
     }
 
     @FXML
     protected void Ship4() {
+        firstStart();
         shipLength = 4;
     }
 
     @FXML
     protected void Ship5() {
+        firstStart();
         shipLength = 5;
     }
 

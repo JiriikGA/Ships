@@ -23,13 +23,11 @@ public class BotAlgorithm extends BattleHandler {
     static void BotAttack() {
         if (destroyShip) {
             DestroyShip();
-
             return;
         }
 
 
         RandomGuess();
-
 
     }
 
