@@ -13,7 +13,6 @@ public class BattleHandler extends ShipsController {
     static boolean destroyShip;
 
     static void Shoot(ArrayList<ArrayList<coordinates>> tempShipPosition, boolean AIon) {
-        //System.out.println("destroyShip = " + destroyShip);
 
         tryAgain = true;
         wasHit = false;
@@ -82,7 +81,6 @@ public class BattleHandler extends ShipsController {
 
             if (sunken) {
                 if(AIon){AfterSunk();}
-
                 FeedbackString = "Potopená loď!";
 
 
@@ -116,7 +114,9 @@ public class BattleHandler extends ShipsController {
 
         if (tempSunken == totalShips) {
             FeedbackString = "Vítězství";
+            tryAgain=false;
         }
+
     }
 }
 

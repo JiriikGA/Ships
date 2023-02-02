@@ -3,24 +3,29 @@ package shipspack.ships;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
+import java.util.ResourceBundle;
 
-public class ShipsController {
+public class ShipsController implements Initializable {
 
     @FXML
     public GridPane grid;
@@ -52,6 +57,37 @@ public class ShipsController {
     private Label Preview1;
     @FXML
     private Label Preview0;
+    @FXML
+    private Button spy_button;
+
+    @FXML
+    private Button sh1plus;
+    @FXML
+    private Button sh2plus;
+    @FXML
+    private Button sh3plus;
+    @FXML
+    private Button sh4plus;
+    @FXML
+    private Button sh5plus;
+    @FXML
+    private Button sh1min;
+    @FXML
+    private Button sh2min;
+    @FXML
+    private Button sh3min;
+    @FXML
+    private Button sh4min;
+    @FXML
+    private Button sh5min;
+
+    @FXML
+    private Button toMenuBut;
+    @FXML
+    private ProgressBar fullnessBar;
+    @FXML
+    private Label fullnessLabel;
+
 
     //testing
     ArrayList<Integer> testList = new ArrayList<>();
@@ -79,10 +115,12 @@ public class ShipsController {
     //Values
     static int shipLength = 4;
     static int row = 10;
-    static Boolean rotated = false;
+    static Boolean rotated = true;
     Boolean AIon = false;
     static Boolean visible = false;
     static Boolean tryAgain = true;
+    static Boolean spyMode = false;
+    int fullness;
 
     static int AIsunken = 0;
     static int PlayerSunken = 0;
@@ -99,9 +137,6 @@ public class ShipsController {
     int ships5 = 1;
 
 
-
-
-
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -109,7 +144,7 @@ public class ShipsController {
     public void ToGame(ActionEvent event) throws IOException {
         System.out.println("Changing scene");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ShipBoard.fxml")));
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -121,10 +156,11 @@ public class ShipsController {
 
 
     }
+
     public void ToMenu(ActionEvent event) throws IOException {
         System.out.println("Changing scene");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Menu&Settings.fxml")));
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -133,113 +169,251 @@ public class ShipsController {
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
+
+
     }
 
     public void ToStats(ActionEvent event) throws IOException {
         System.out.println("Changing scene");
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
 
-@FXML
-public void modeControll()
-{
+    public void CustomGame(ActionEvent event) {
+        Button sourceButton = (Button) event.getSource();
+        char num = sourceButton.getId().charAt(2);
+        char change = sourceButton.getId().charAt(3);
 
-    selectedMode++;
-    if(selectedMode > 5){selectedMode = 0;}
-    if(selectedMode == 0){gameMode = 0; ModeButton.setText("Herní mód: Flotila");}
-    if(selectedMode == 1){gameMode = 1; ModeButton.setText("Herní mód: Tradiční");}
-    if(selectedMode == 2){gameMode = 2; ModeButton.setText("Herní mód: Tradiční - M. Bradley");}
-    if(selectedMode == 3){gameMode = 3; ModeButton.setText("Herní mód: Ruská");}
-    if(selectedMode == 4){gameMode = 4; ModeButton.setText("Herní mód: Loterie");}
-    if(selectedMode == 5){gameMode = 5; ModeButton.setText("Herní mód: Vlastní");}
+        if (num == '1') {
+            if (change == 'm') {
+                ships1 -= 1;
+                System.out.println(ships1);
+            }
+            else ships1 += 1;
+
+        }
+
+        if (num == '2') {
+            if (change == 'm') {
+                ships2 -= 1;
+                System.out.println(ships2);
+            }
+            else ships2 += 1;
+
+        }
+
+        if (num == '3') {
+            if (change == 'm') {
+                ships3 -= 1;
+                System.out.println(ships3);
+            }
+            else ships3 += 1;
+
+        }
+
+        if (num == '4') {
+            if (change == 'm') {
+                ships4 -= 1;
+                System.out.println(ships4);
+            }
+            else ships4 += 1;
+
+        }
+
+        if (num == '5') {
+            if (change == 'm') {
+                ships5 -= 1;
+                System.out.println(ships5);
+            }
+            else ships5 += 1;
+
+        }
 
 
-    //Mody hry
-    // FLotila
-    if (gameMode == 0) {
-        ships1 = 0;
-        ships2 = 3;
-        ships3 = 1;
-        ships4 = 2;
-        ships5 = 1;
+        //zaplnenost (n+2)*3
+        fullness = ships1*6 + ships2*9 + ships3*12 + ships4*15 + ships5*18;
+        System.out.println(fullness);
+        if(fullness <= 0){toMenuBut.setDisable(true);}
+        else toMenuBut.setDisable(false);
+
+
+        sh1min.setDisable(ships1 == 0);
+        sh2min.setDisable(ships2 == 0);
+        sh3min.setDisable(ships3 == 0);
+        sh4min.setDisable(ships4 == 0);
+        sh5min.setDisable(ships5 == 0);
+
+        //kontrola zaplnenosti
+        sh5plus.setDisable(fullness + 18 >= 100);
+        sh4plus.setDisable(fullness + 15 >= 100);
+        sh3plus.setDisable(fullness + 12 >= 100);
+        sh2plus.setDisable(fullness + 9 >= 100);
+        sh1plus.setDisable(fullness + 6 >= 100);
+
+        fullnessLabel.setText(fullness + "%");
+        fullnessBar.setProgress((double) fullness/100);
+
+        Preview0.setText(String.valueOf(ships1));
+        Preview1.setText(String.valueOf(ships2));
+        Preview2.setText(String.valueOf(ships3));
+        Preview3.setText(String.valueOf(ships4));
+        Preview4.setText(String.valueOf(ships5));
+
     }
 
-    //Tradicni
-    if (gameMode == 1) {
-        ships1 = 2;
-        ships2 = 4;
-        ships3 = 2;
-        ships4 = 1;
-        ships5 = 0;
+
+    @FXML
+    public void modeControll() {
+
+        selectedMode++;
+        if (selectedMode > 5) {
+            selectedMode = 0;
+        }
+        if (selectedMode == 0) {
+            gameMode = 0;
+            ModeButton.setText("Herní mód: Flotila");
+        }
+        if (selectedMode == 1) {
+            gameMode = 1;
+            ModeButton.setText("Herní mód: Tradiční");
+        }
+        if (selectedMode == 2) {
+            gameMode = 2;
+            ModeButton.setText("Herní mód: Tradiční - M. Bradley");
+        }
+        if (selectedMode == 3) {
+            gameMode = 3;
+            ModeButton.setText("Herní mód: Ruská");
+        }
+        if (selectedMode == 4) {
+            gameMode = 4;
+            ModeButton.setText("Herní mód: Loterie");
+        }
+        if (selectedMode == 5) {
+            gameMode = 5;
+            ModeButton.setText("Herní mód: Vlastní");
+        }
+
+
+        if (selectedMode != 5) {
+            sh1min.setDisable(true);
+            sh2min.setDisable(true);
+            sh3min.setDisable(true);
+            sh4min.setDisable(true);
+            sh5min.setDisable(true);
+            sh1plus.setDisable(true);
+            sh2plus.setDisable(true);
+            sh3plus.setDisable(true);
+            sh4plus.setDisable(true);
+            sh5plus.setDisable(true);
+        } else {
+            sh1min.setDisable(false);
+            sh2min.setDisable(false);
+            sh3min.setDisable(false);
+            sh4min.setDisable(false);
+            sh5min.setDisable(false);
+            sh1plus.setDisable(false);
+            sh2plus.setDisable(false);
+            sh3plus.setDisable(false);
+            sh4plus.setDisable(false);
+            sh5plus.setDisable(false);
+        }
+
+
+
+
+        //Mody hry
+        // FLotila
+        if (gameMode == 0) {
+            ships1 = 0;
+            ships2 = 3;
+            ships3 = 1;
+            ships4 = 2;
+            ships5 = 1;
+        }
+
+        //Tradicni
+        if (gameMode == 1) {
+            ships1 = 2;
+            ships2 = 4;
+            ships3 = 2;
+            ships4 = 1;
+            ships5 = 0;
+        }
+
+        //tradicni M. Bradley 1990
+        if (gameMode == 2) {
+            ships1 = 0;
+            ships2 = 1;
+            ships3 = 1;
+            ships4 = 1;
+            ships5 = 1;
+        }
+
+        //Ruská
+        if (gameMode == 3) {
+            ships1 = 4;
+            ships2 = 3;
+            ships3 = 2;
+            ships4 = 1;
+            ships5 = 0;
+        }
+
+        //Loterie
+        if (gameMode == 4) {
+            ships1 = 1;
+            ships2 = 0;
+            ships3 = 0;
+            ships4 = 0;
+            ships5 = 0;
+        }
+
+        // test
+        if (gameMode == 5) {
+            ships1 = 0;
+            ships2 = 0;
+            ships3 = 0;
+            ships4 = 0;
+            ships5 = 0;
+        }
+
+        fullness = ships1*6 + ships2*9 + ships3*12 + ships4*15 + ships5*18;
+        System.out.println(fullness);
+
+        fullnessLabel.setText(fullness + "%");
+        fullnessBar.setProgress((double) fullness/100);
+
+        if(ships1 == 0){sh1min.setDisable(true);}
+        if(ships2 == 0){sh2min.setDisable(true);}
+        if(ships3 == 0){sh3min.setDisable(true);}
+        if(ships4 == 0){sh4min.setDisable(true);}
+        if(ships5 == 0){sh5min.setDisable(true);}
+
+        Preview0.setText(String.valueOf(ships1));
+        Preview1.setText(String.valueOf(ships2));
+        Preview2.setText(String.valueOf(ships3));
+        Preview3.setText(String.valueOf(ships4));
+        Preview4.setText(String.valueOf(ships5));
+
     }
-
-    //tradicni M. Bradley 1990
-    if (gameMode == 2) {
-        ships1 = 0;
-        ships2 = 1;
-        ships3 = 1;
-        ships4 = 1;
-        ships5 = 1;
-    }
-
-    //Ruská
-    if (gameMode == 3) {
-        ships1 = 4;
-        ships2 = 3;
-        ships3 = 2;
-        ships4 = 1;
-        ships5 = 0;
-    }
-
-    //Loterie
-    if (gameMode == 4) {
-        ships1 = 1;
-        ships2 = 0;
-        ships3 = 0;
-        ships4 = 0;
-        ships5 = 0;
-    }
-
-    // test
-    if (gameMode == 5) {
-        ships1 = 0;
-        ships2 = 0;
-        ships3 = 0;
-        ships4 = 0;
-        ships5 = 5;
-    }
-
-
-
-    Preview0.setText(String.valueOf(ships1));
-    Preview1.setText(String.valueOf(ships2));
-    Preview2.setText(String.valueOf(ships3));
-    Preview3.setText(String.valueOf(ships4));
-    Preview4.setText(String.valueOf(ships5));
-
-}
-
-
-
-
 
 
     @FXML
     void firstStart() {
 
-        if(firstStart){
-            firstStart = false;
+        if (!firstStart) {
+            return;
         }
-        else return;
+        firstStart = false;
+
         //grid.setStyle("-fx-background-image: url('Water.png')");
 
         //test
         for (int i = 0; i < 14; i++) {
-            testList.add(i,0);
+            testList.add(i, 0);
         }
 
         totalShips = ships1 + 2 * ships2 + 3 * ships3 + 4 * ships4 + 5 * ships5;
@@ -307,7 +481,6 @@ public void modeControll()
                 ShootBut.setOnAction(e -> {
                     currentCoordinates.set(finalX, finalY);
                     BattleController();
-                    //ShootShip();
                 });
                 GridPane.setHalignment(ShootBut, HPos.CENTER);
                 GridPane.setValignment(ShootBut, VPos.CENTER);
@@ -315,6 +488,8 @@ public void modeControll()
             }
         }
 
+
+        enemyGrid.setDisable(true);
         Start();
     }
 
@@ -322,10 +497,13 @@ public void modeControll()
     @FXML
     void Start() {
 
+        spy_button.setDisable(true);
 
         //Rotate button CSS
-        if(rotated){RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");}
-        else RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+        if (rotated) {
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+        } else
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
 
         /** Nastavi pocet lodi*/
         shipNumberList.set(0, ships1);
@@ -347,40 +525,20 @@ public void modeControll()
         RotateButton.setText("");
         rotated = !rotated;
         System.out.println("rotated = " + rotated);
-        if(rotated){RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");}
-        else RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+        if (rotated) {
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+        } else
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
     }
 
-    @FXML
-    protected void Ship1() {
+
+
+    public void SelectShip(ActionEvent event) {
+        Button sourceButton = (Button) event.getSource();
+        char num = sourceButton.getId().charAt(6);
         firstStart();
-        shipLength = 1;
+        shipLength = Character.getNumericValue(num);
     }
-
-    @FXML
-    protected void Ship2() {
-        firstStart();
-        shipLength = 2;
-    }
-
-    @FXML
-    protected void Ship3() {
-        firstStart();
-        shipLength = 3;
-    }
-
-    @FXML
-    protected void Ship4() {
-        firstStart();
-        shipLength = 4;
-    }
-
-    @FXML
-    protected void Ship5() {
-        firstStart();
-        shipLength = 5;
-    }
-
 
     public void CreateShip() {
 
@@ -510,11 +668,10 @@ public void modeControll()
             }
 
         }
-            testList.set(13, testList.get(13)+ 1);
-            for (int i = 0; i < testList.size(); i++) {
-                System.out.println(i + " " + testList.get(i));
-            }
-
+        testList.set(13, testList.get(13) + 1);
+        for (int i = 0; i < testList.size(); i++) {
+            System.out.println(i + " " + testList.get(i));
+        }
 
 
         grid.getChildren().remove(row * row + 1, grid.getChildren().size());
@@ -575,6 +732,19 @@ public void modeControll()
 
     @FXML
     void StartBattle() {
+        int postaveneLode = 0;
+        for (int num = 4; num >= 0; num--) {
+            postaveneLode += tempShipNumberList.get(num);
+        }
+
+        System.out.println(postaveneLode);
+        if (postaveneLode != 0) {
+            FeedbackString = "Muséte postavit všechny lodě";
+            Refresh();
+            return;
+        }
+
+
         AIon = true;
 
         RandomBuild();
@@ -584,6 +754,15 @@ public void modeControll()
         AIBlockedList.clear();
 
         AIon = false;
+
+        enemyGrid.setDisable(false);
+        grid.setDisable(true);
+
+        //TODO - prechod z build modu do battle modu
+
+        spy_button.setDisable(!spyMode);
+
+
     }
 
 
@@ -644,16 +823,31 @@ public void modeControll()
     }
 
 
+    @FXML
+    public void SpymodeBool() {
+        spyMode = !spyMode;
+        System.out.println(spyMode);
+    }
+
+
     //test
     @FXML
-    public void Test()
-    {
+    public void Test() {
         for (int i = 0; i < 57412; i++) {
             RandomBuild();
             ClearBoard();
         }
 
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
+
+    }
+
 
 }
 

@@ -13,3 +13,6 @@ https://stackoverflow.com/questions/33973830/javafx-gridpane-background-image
 
 Switching scenes
 https://www.youtube.com/watch?v=hcM-R-YOKkQ&t=108s
+
+Button check
+https://stackoverflow.com/questions/51456418/how-to-check-which-button-in-fxml-has-invoked-a-function-in-controller-java-wh

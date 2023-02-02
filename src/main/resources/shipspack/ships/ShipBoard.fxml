@@ -57,7 +57,7 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="914.0" prefWidth="1200.0" VBox.vgrow="ALWAYS">
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="974.0" prefWidth="1400.0" VBox.vgrow="ALWAYS">
             <children>
             <Pane layoutX="675.0" layoutY="205.0" prefHeight="657.0" prefWidth="597.0">
                <children>
@@ -94,70 +94,158 @@
                       </GridPane>
                </children>
             </Pane>
-                <GridPane fx:id="grid" gridLinesVisible="true" layoutX="143.0" layoutY="334.0" prefHeight="400.0" prefWidth="400.0" style="-fx-border-color: black; -fx-background-image: url('Water.png');">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-            <Button layoutX="225.0" layoutY="103.0" mnemonicParsing="false" onAction="#Ship2" prefHeight="74.0" prefWidth="69.0" text="Ship 2" />
-            <Button layoutX="308.0" layoutY="103.0" mnemonicParsing="false" onAction="#Ship3" prefHeight="74.0" prefWidth="69.0" text="Ship 3" />
-            <Button layoutX="388.0" layoutY="103.0" mnemonicParsing="false" onAction="#Ship4" prefHeight="74.0" prefWidth="69.0" text="Ship 4" />
-            <Button layoutX="473.0" layoutY="103.0" mnemonicParsing="false" onAction="#Ship5" prefHeight="74.0" prefWidth="69.0" text="Ship 5" />
-            <Button fx:id="RotateButton" layoutX="22.0" layoutY="91.0" mnemonicParsing="false" onAction="#Rotate" prefHeight="100.0" prefWidth="100.0" style="-fx-background-size: contain; -fx-background-image: url('rotateShip.png'); -fx-background-position: center; -fx-background-repeat: no-repeat; -fx-rotate: 90;" text="Otocit" />
-            <Label fx:id="Ships2" layoutX="231.0" layoutY="191.0" prefHeight="39.0" prefWidth="33.0" text="x">
-               <font>
-                  <Font size="27.0" />
-               </font>
-            </Label>
-            <Label fx:id="Ships3" layoutX="326.0" layoutY="191.0" prefHeight="39.0" prefWidth="33.0" text="x">
-               <font>
-                  <Font size="27.0" />
-               </font>
-            </Label>
-            <Label fx:id="Ships4" layoutX="406.0" layoutY="191.0" prefHeight="39.0" prefWidth="33.0" text="x">
-               <font>
-                  <Font size="27.0" />
-               </font>
-            </Label>
-            <Label fx:id="Ships5" layoutX="491.0" layoutY="185.0" prefHeight="39.0" prefWidth="33.0" text="x">
-               <font>
-                  <Font size="27.0" />
-               </font>
-            </Label>
-            <Label fx:id="Feedback" layoutX="720.0" layoutY="52.0" prefHeight="39.0" prefWidth="322.0" text="Feedback" />
+            <Button fx:id="RotateButton" layoutX="22.0" layoutY="91.0" mnemonicParsing="false" onAction="#Rotate" prefHeight="100.0" prefWidth="100.0" style="-fx-background-size: contain; -fx-background-image: url('rotateShip.png'); -fx-background-position: center; -fx-background-repeat: no-repeat; -fx-rotate: 0;" text="Otocit" />
+            <Label fx:id="Feedback" layoutX="133.0" layoutY="775.0" prefHeight="39.0" prefWidth="322.0" text="Feedback" />
             <Button layoutX="260.0" layoutY="852.0" mnemonicParsing="false" onAction="#ClearBoard" prefHeight="56.0" prefWidth="120.0" text="Vycistit desku" />
-            <Button layoutX="1053.0" layoutY="852.0" mnemonicParsing="false" onAction="#ToMenu" prefHeight="56.0" prefWidth="120.0" text="Zpet do menu" />
+            <Button layoutX="1227.0" layoutY="852.0" mnemonicParsing="false" onAction="#ToMenu" prefHeight="56.0" prefWidth="120.0" text="Zpet do menu" />
             <Button layoutX="105.0" layoutY="852.0" mnemonicParsing="false" onAction="#StartBattle" prefHeight="56.0" prefWidth="120.0" text="Do bitvy" />
-            <Button layoutX="151.0" layoutY="10.0" mnemonicParsing="false" onAction="#Ship1" prefHeight="167.0" prefWidth="69.0" text="Ship 1" />
-            <Label fx:id="Ships1" layoutX="180.0" layoutY="191.0" prefHeight="39.0" prefWidth="33.0" text="x">
-               <font>
-                  <Font size="27.0" />
-               </font>
-            </Label>
             <Button layoutX="406.0" layoutY="852.0" mnemonicParsing="false" onAction="#RandomBuild" prefHeight="56.0" prefWidth="120.0" text="Náhodné postavení" />
-            <Button layoutX="555.0" layoutY="852.0" mnemonicParsing="false" onAction="#Switch" prefHeight="56.0" prefWidth="120.0" text="spy mode" />
-            <Button layoutX="1194.0" layoutY="852.0" mnemonicParsing="false" onAction="#ToStats" prefHeight="56.0" prefWidth="151.0" text="Podívat se na statistiky" />
+            <Button fx:id="spy_button" layoutX="555.0" layoutY="852.0" mnemonicParsing="false" onAction="#Switch" prefHeight="56.0" prefWidth="120.0" text="Mód špiona" />
+            <Button layoutX="1057.0" layoutY="852.0" mnemonicParsing="false" onAction="#ToStats" prefHeight="56.0" prefWidth="151.0" text="Podívat se na statistiky" />
+            <GridPane fx:id="grid" gridLinesVisible="true" layoutX="180.0" layoutY="334.0" prefHeight="400.0" prefWidth="400.0" style="-fx-border-color: black; -fx-background-image: url('Water.png');">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Pane layoutX="144.0" layoutY="24.0" prefHeight="200.0" prefWidth="448.0">
+               <children>
+                  <Button fx:id="Select5" layoutX="365.0" layoutY="6.0" mnemonicParsing="false" onAction="#SelectShip" prefHeight="167.0" prefWidth="69.0" text="5" />
+                  <Button fx:id="Select4" layoutX="285.0" layoutY="6.0" mnemonicParsing="false" onAction="#SelectShip" prefHeight="167.0" prefWidth="69.0" text="4" />
+                  <Button fx:id="Select3" layoutX="204.0" layoutY="6.0" mnemonicParsing="false" onAction="#SelectShip" prefHeight="167.0" prefWidth="69.0" text="3" />
+                  <Button fx:id="Select2" layoutX="119.0" layoutY="6.0" mnemonicParsing="false" onAction="#SelectShip" prefHeight="167.0" prefWidth="69.0" text="2" />
+                  <Button fx:id="Select1" layoutX="32.0" layoutY="6.0" mnemonicParsing="false" onAction="#SelectShip" prefHeight="167.0" prefWidth="69.0" text="1" />
+                  <ImageView fitHeight="165.0" fitWidth="200.0" layoutX="378.0" layoutY="7.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../ImgShip5R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="192.0" fitWidth="88.0" layoutX="299.0" layoutY="-25.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../ImgShip4R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="124.0" fitWidth="181.0" layoutX="223.0" layoutY="43.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
+                     <image>
+                        <Image url="@../../ImgShip3R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="124.0" fitWidth="181.0" layoutX="135.0" layoutY="90.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
+                     <image>
+                        <Image url="@../../ImgShip2R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="73.0" fitWidth="49.0" layoutX="47.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 0;">
+                     <image>
+                        <Image url="@../../ImgShip1R.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="Ships5" alignment="CENTER" layoutX="383.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships4" alignment="CENTER" layoutX="296.0" layoutY="163.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships3" alignment="CENTER" layoutX="217.0" layoutY="162.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships2" alignment="CENTER" layoutX="133.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text=".">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships1" alignment="CENTER" layoutX="45.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text=".">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane layoutX="743.0" layoutY="24.0" prefHeight="200.0" prefWidth="448.0">
+               <children>
+                  <Button layoutX="365.0" layoutY="6.0" mnemonicParsing="false" prefHeight="167.0" prefWidth="69.0" text="5" />
+                  <Button layoutX="285.0" layoutY="6.0" mnemonicParsing="false" prefHeight="167.0" prefWidth="69.0" text="4" />
+                  <Button layoutX="204.0" layoutY="6.0" mnemonicParsing="false" prefHeight="167.0" prefWidth="69.0" text="3" />
+                  <Button layoutX="119.0" layoutY="6.0" mnemonicParsing="false" prefHeight="167.0" prefWidth="69.0" text="2" />
+                  <Button layoutX="32.0" layoutY="6.0" mnemonicParsing="false" prefHeight="167.0" prefWidth="69.0" text="1" />
+                  <ImageView fitHeight="165.0" fitWidth="200.0" layoutX="378.0" layoutY="7.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../ImgShip5R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="192.0" fitWidth="88.0" layoutX="299.0" layoutY="-25.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../ImgShip4R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="124.0" fitWidth="181.0" layoutX="223.0" layoutY="43.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
+                     <image>
+                        <Image url="@../../ImgShip3R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="124.0" fitWidth="181.0" layoutX="135.0" layoutY="90.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
+                     <image>
+                        <Image url="@../../ImgShip2R.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="73.0" fitWidth="49.0" layoutX="47.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 0;">
+                     <image>
+                        <Image url="@../../ImgShip1R.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="Ships51" alignment="CENTER" layoutX="383.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships41" alignment="CENTER" layoutX="296.0" layoutY="163.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships31" alignment="CENTER" layoutX="217.0" layoutY="162.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships21" alignment="CENTER" layoutX="133.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="Ships11" alignment="CENTER" layoutX="45.0" layoutY="160.0" prefHeight="48.0" prefWidth="43.0" text="x">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
             </children>
         </AnchorPane>
     </children>
