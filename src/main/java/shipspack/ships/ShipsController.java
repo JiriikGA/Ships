@@ -1,6 +1,7 @@
 package shipspack.ships;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,7 +17,10 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,8 +28,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
-public class ShipsController implements Initializable {
+
+public class ShipsController  {
 
     @FXML
     public GridPane grid;
@@ -41,6 +47,16 @@ public class ShipsController implements Initializable {
     private Label Ships4;
     @FXML
     private Label Ships5;
+    @FXML
+    public Label Ships1AI;
+    @FXML
+    public Label Ships2AI;
+    @FXML
+    public Label Ships3AI;
+    @FXML
+    public Label Ships4AI;
+    @FXML
+    public Label Ships5AI;
     @FXML
     public Label Feedback;
     @FXML
@@ -87,7 +103,14 @@ public class ShipsController implements Initializable {
     private ProgressBar fullnessBar;
     @FXML
     private Label fullnessLabel;
-
+    @FXML
+    private Pane enemyPane;
+    @FXML
+    private HBox buildBox;
+    @FXML
+    private Button statsBut;
+    @FXML
+    private Pane statsPane;
 
     //testing
     ArrayList<Integer> testList = new ArrayList<>();
@@ -100,15 +123,15 @@ public class ShipsController implements Initializable {
     //temp
     static ArrayList<coordinates> tempBlockedList = new ArrayList<>();
     ArrayList<Integer> tempShipNumberList = new ArrayList<>();
-    static ArrayList<ArrayList<coordinates>> tempShipPosition = new ArrayList<ArrayList<coordinates>>();
+    static ArrayList<ArrayList<coordinates>> tempShipPosition = new ArrayList<>();
 
     // Player
     ArrayList<coordinates> blockedList = new ArrayList<>();
     ArrayList<Integer> shipNumberList = new ArrayList<>();
-    static ArrayList<ArrayList<coordinates>> shipPosition = new ArrayList<ArrayList<coordinates>>();
+    static ArrayList<ArrayList<coordinates>> shipPosition = new ArrayList<>();
 
     //AI enemy
-    ArrayList<ArrayList<coordinates>> AIShipPosition = new ArrayList<ArrayList<coordinates>>();
+    ArrayList<ArrayList<coordinates>> AIShipPosition = new ArrayList<>();
     public ArrayList<coordinates> AIBlockedList = new ArrayList<>();
     public ArrayList<Integer> AIShipNumberList = new ArrayList<>();
 
@@ -121,6 +144,7 @@ public class ShipsController implements Initializable {
     static Boolean tryAgain = true;
     static Boolean spyMode = false;
     int fullness;
+    static ArrayList<Integer> statsArr = new ArrayList<>();
 
     static int AIsunken = 0;
     static int PlayerSunken = 0;
@@ -130,19 +154,21 @@ public class ShipsController implements Initializable {
     boolean firstStart = true;
 
     int gameMode = 0;
-    int ships1 = 1;
-    int ships2 = 2;
-    int ships3 = 1;
-    int ships4 = 2;
-    int ships5 = 1;
+    static int ships1 = 1;
+    static int ships2 = 2;
+    static int ships3 = 1;
+    static int ships4 = 2;
+    static int ships5 = 1;
 
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    public void ToGame(ActionEvent event) throws IOException {
-        System.out.println("Changing scene");
+
+
+    public void ToGame(ActionEvent event) throws IOException, InterruptedException {
+        System.out.println("Changing scene to game");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ShipBoard.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -154,11 +180,10 @@ public class ShipsController implements Initializable {
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
 
-
     }
 
     public void ToMenu(ActionEvent event) throws IOException {
-        System.out.println("Changing scene");
+        System.out.println("Changing scene to menu");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Menu&Settings.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -173,12 +198,11 @@ public class ShipsController implements Initializable {
 
     }
 
-    public void ToStats(ActionEvent event) throws IOException {
-        System.out.println("Changing scene");
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    public void ToStats() {
+        if(!statsPane.isVisible()){statsBut.setText("Zavřít statistiky");}
+        else statsBut.setText("Podívat se na statistiky");
+        statsPane.setVisible(!statsPane.isVisible());
+
     }
 
 
@@ -191,8 +215,7 @@ public class ShipsController implements Initializable {
             if (change == 'm') {
                 ships1 -= 1;
                 System.out.println(ships1);
-            }
-            else ships1 += 1;
+            } else ships1 += 1;
 
         }
 
@@ -200,8 +223,7 @@ public class ShipsController implements Initializable {
             if (change == 'm') {
                 ships2 -= 1;
                 System.out.println(ships2);
-            }
-            else ships2 += 1;
+            } else ships2 += 1;
 
         }
 
@@ -209,8 +231,7 @@ public class ShipsController implements Initializable {
             if (change == 'm') {
                 ships3 -= 1;
                 System.out.println(ships3);
-            }
-            else ships3 += 1;
+            } else ships3 += 1;
 
         }
 
@@ -218,8 +239,7 @@ public class ShipsController implements Initializable {
             if (change == 'm') {
                 ships4 -= 1;
                 System.out.println(ships4);
-            }
-            else ships4 += 1;
+            } else ships4 += 1;
 
         }
 
@@ -227,17 +247,17 @@ public class ShipsController implements Initializable {
             if (change == 'm') {
                 ships5 -= 1;
                 System.out.println(ships5);
-            }
-            else ships5 += 1;
+            } else ships5 += 1;
 
         }
 
 
         //zaplnenost (n+2)*3
-        fullness = ships1*6 + ships2*9 + ships3*12 + ships4*15 + ships5*18;
+        fullness = ships1 * 6 + ships2 * 9 + ships3 * 12 + ships4 * 15 + ships5 * 18;
         System.out.println(fullness);
-        if(fullness <= 0){toMenuBut.setDisable(true);}
-        else toMenuBut.setDisable(false);
+        if (fullness <= 0) {
+            toMenuBut.setDisable(true);
+        } else toMenuBut.setDisable(false);
 
 
         sh1min.setDisable(ships1 == 0);
@@ -254,7 +274,7 @@ public class ShipsController implements Initializable {
         sh1plus.setDisable(fullness + 6 >= 100);
 
         fullnessLabel.setText(fullness + "%");
-        fullnessBar.setProgress((double) fullness/100);
+        fullnessBar.setProgress((double) fullness / 100);
 
         Preview0.setText(String.valueOf(ships1));
         Preview1.setText(String.valueOf(ships2));
@@ -323,8 +343,6 @@ public class ShipsController implements Initializable {
         }
 
 
-
-
         //Mody hry
         // FLotila
         if (gameMode == 0) {
@@ -380,17 +398,30 @@ public class ShipsController implements Initializable {
             ships5 = 0;
         }
 
-        fullness = ships1*6 + ships2*9 + ships3*12 + ships4*15 + ships5*18;
+        fullness = ships1 * 6 + ships2 * 9 + ships3 * 12 + ships4 * 15 + ships5 * 18;
         System.out.println(fullness);
 
         fullnessLabel.setText(fullness + "%");
-        fullnessBar.setProgress((double) fullness/100);
+        fullnessBar.setProgress((double) fullness / 100);
 
-        if(ships1 == 0){sh1min.setDisable(true);}
-        if(ships2 == 0){sh2min.setDisable(true);}
-        if(ships3 == 0){sh3min.setDisable(true);}
-        if(ships4 == 0){sh4min.setDisable(true);}
-        if(ships5 == 0){sh5min.setDisable(true);}
+        if (ships1 == 0) {
+            sh1min.setDisable(true);
+        }
+        if (ships2 == 0) {
+            sh2min.setDisable(true);
+        }
+        if (ships3 == 0) {
+            sh3min.setDisable(true);
+        }
+        if (ships4 == 0) {
+            sh4min.setDisable(true);
+        }
+        if (ships5 == 0) {
+            sh5min.setDisable(true);
+        }
+        if (fullness <= 0) {
+            toMenuBut.setDisable(true);
+        } else toMenuBut.setDisable(false);
 
         Preview0.setText(String.valueOf(ships1));
         Preview1.setText(String.valueOf(ships2));
@@ -402,12 +433,17 @@ public class ShipsController implements Initializable {
 
 
     @FXML
+    private Button initializeBut;
+
+    @FXML
     void firstStart() {
 
         if (!firstStart) {
             return;
         }
         firstStart = false;
+        initializeBut.setVisible(false);
+        RotateButton.setText("");
 
         //grid.setStyle("-fx-background-image: url('Water.png')");
 
@@ -419,9 +455,13 @@ public class ShipsController implements Initializable {
         totalShips = ships1 + 2 * ships2 + 3 * ships3 + 4 * ships4 + 5 * ships5;
         System.out.println("total ships =" + totalShips);
 
+        for (int i = 0; i < 5; i++) {
+            statsArr.add(i,0);
+        }
+
+
 
         /** Pocet lodi*/
-
         shipNumberList.add(0, ships1);
         shipNumberList.add(1, ships2);
         shipNumberList.add(2, ships3);
@@ -499,6 +539,12 @@ public class ShipsController implements Initializable {
 
         spy_button.setDisable(true);
 
+
+        //after battle change
+        enemyPane.setVisible(false);
+        spy_button.setVisible(false);
+        statsBut.setVisible(false);
+
         //Rotate button CSS
         if (rotated) {
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
@@ -520,6 +566,8 @@ public class ShipsController implements Initializable {
     }
 
 
+
+
     @FXML
     protected void Rotate() {
         RotateButton.setText("");
@@ -529,15 +577,18 @@ public class ShipsController implements Initializable {
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
         } else
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
-    }
 
+
+
+
+    }
 
 
     public void SelectShip(ActionEvent event) {
         Button sourceButton = (Button) event.getSource();
-        char num = sourceButton.getId().charAt(6);
-        firstStart();
-        shipLength = Character.getNumericValue(num);
+        char number = sourceButton.getId().charAt(6);
+        firstStart();/////////////////////////////////////////
+        shipLength = Character.getNumericValue(number);
     }
 
     public void CreateShip() {
@@ -613,11 +664,15 @@ public class ShipsController implements Initializable {
 
         Feedback.setText(FeedbackString);
 
+        if(!grid.isDisabled())
+        {
         Ships1.setText(String.valueOf(shipNumberList.get(0)));
         Ships2.setText(String.valueOf(shipNumberList.get(1)));
         Ships3.setText(String.valueOf(shipNumberList.get(2)));
         Ships4.setText(String.valueOf(shipNumberList.get(3)));
         Ships5.setText(String.valueOf(shipNumberList.get(4)));
+        }
+        FeedbackString = "";
     }
 
 
@@ -625,7 +680,7 @@ public class ShipsController implements Initializable {
     public void ClearBoard() {
 
         //test
-        for (int j = 0; j < shipPosition.size(); j++) {
+       /* for (int j = 0; j < shipPosition.size(); j++) {
 
             if (ContainsThisCoords(shipPosition.get(j), new coordinates(0, 0))) {
                 testList.set(0, testList.get(0) + 1);
@@ -672,7 +727,7 @@ public class ShipsController implements Initializable {
         for (int i = 0; i < testList.size(); i++) {
             System.out.println(i + " " + testList.get(i));
         }
-
+        */
 
         grid.getChildren().remove(row * row + 1, grid.getChildren().size());
 
@@ -686,6 +741,7 @@ public class ShipsController implements Initializable {
         Start();
     }
 
+    static int sunkPos = -1;
     void ShootShip() {
 
 
@@ -711,6 +767,34 @@ public class ShipsController implements Initializable {
         } else BattleHandler.Shoot(tempShipPosition, AIon);
 
 
+        //zmena zbyvajicich lodi a statistik
+        if(sunkPos != -1)
+        {
+            System.out.println("potopeno velikost " + tempShipPosition.get(sunkPos).size() + " hrace " + AIon);
+            if(AIon)
+            {
+                if(tempShipPosition.get(sunkPos).size() == 1) {Ships1.setText(String.valueOf(Integer.parseInt(Ships1.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 2) {Ships2.setText(String.valueOf(Integer.parseInt(Ships2.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 3) {Ships3.setText(String.valueOf(Integer.parseInt(Ships3.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 4) {Ships4.setText(String.valueOf(Integer.parseInt(Ships4.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 5) {Ships5.setText(String.valueOf(Integer.parseInt(Ships5.getText())-1));}
+            }
+            else
+            {
+                if(tempShipPosition.get(sunkPos).size() == 1) {Ships1AI.setText(String.valueOf(Integer.parseInt(Ships1AI.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 2) {Ships2AI.setText(String.valueOf(Integer.parseInt(Ships2AI.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 3) {Ships3AI.setText(String.valueOf(Integer.parseInt(Ships3AI.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 4) {Ships4AI.setText(String.valueOf(Integer.parseInt(Ships4AI.getText())-1));}
+                if(tempShipPosition.get(sunkPos).size() == 5) {Ships5AI.setText(String.valueOf(Integer.parseInt(Ships5AI.getText())-1));}
+            }
+        }
+            sunkPos = -1;
+
+        if(AIon){statsArr.set(0,statsArr.get(0)+1);}
+        else {statsArr.set(1,statsArr.get(1)+1);}
+
+        System.out.println(statsArr);
+
         /** Vrácení hodnot do daných listů*/
         if (AIon) {
             grid = tempGrid;
@@ -732,13 +816,21 @@ public class ShipsController implements Initializable {
 
     @FXML
     void StartBattle() {
-        int postaveneLode = 0;
-        for (int num = 4; num >= 0; num--) {
-            postaveneLode += tempShipNumberList.get(num);
+
+        if(tempShipNumberList.size() < 4){
+            FeedbackString = "Vyberte velikost lode a kliknete na políčko modré desky";
+            Refresh();
+            return;
         }
 
-        System.out.println(postaveneLode);
-        if (postaveneLode != 0) {
+        int nepostaveneLode = 0;
+
+        for (int num = 4; num >= 0; num--) {
+            nepostaveneLode += tempShipNumberList.get(num);
+        }
+
+        System.out.println(nepostaveneLode);
+        if (nepostaveneLode != 0) {
             FeedbackString = "Muséte postavit všechny lodě";
             Refresh();
             return;
@@ -755,12 +847,37 @@ public class ShipsController implements Initializable {
 
         AIon = false;
 
-        enemyGrid.setDisable(false);
-        grid.setDisable(true);
+
+
+        spy_button.setDisable(!spyMode);
+
 
         //TODO - prechod z build modu do battle modu
 
-        spy_button.setDisable(!spyMode);
+        enemyGrid.setDisable(false);
+        statsBut.setVisible(true);
+        spy_button.setVisible(true);
+        enemyPane.setVisible(true);
+
+        RotateButton.setVisible(false);
+        grid.setDisable(true);
+        buildBox.setVisible(false);
+
+        Ships1.setText(String.valueOf((ships1)));
+        Ships2.setText(String.valueOf((ships2)));
+        Ships3.setText(String.valueOf((ships3)));
+        Ships4.setText(String.valueOf((ships4)));
+        Ships5.setText(String.valueOf((ships5)));
+
+        Ships1AI.setText(String.valueOf((ships1)));
+        Ships2AI.setText(String.valueOf((ships2)));
+        Ships3AI.setText(String.valueOf((ships3)));
+        Ships4AI.setText(String.valueOf((ships4)));
+        Ships5AI.setText(String.valueOf((ships5)));
+
+
+
+
 
 
     }
@@ -802,6 +919,7 @@ public class ShipsController implements Initializable {
         }
 
         AIon = true;
+        statsArr.set(4,statsArr.get(4)+1);
 
         tryAgain = true;
         while (tryAgain) {
@@ -809,8 +927,10 @@ public class ShipsController implements Initializable {
             ShootShip();
         }
         AIon = false;
-
+        statsArr.set(4,statsArr.get(4)+1);
     }
+
+
 
     public static Boolean ContainsThisCoords(ArrayList<coordinates> coordsArray, coordinates finding) {
         //System.out.println("checking coordinates " + finding);
@@ -840,13 +960,13 @@ public class ShipsController implements Initializable {
 
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
-
-
+    public void CloseApp()
+    {
+       System.exit(0);
     }
+
+
 
 
 }

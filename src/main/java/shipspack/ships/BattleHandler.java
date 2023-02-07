@@ -1,5 +1,6 @@
 package shipspack.ships;
 
+import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class BattleHandler extends ShipsController {
     static boolean wasHit;
     static boolean destroyShip;
 
+    @FXML
     static void Shoot(ArrayList<ArrayList<coordinates>> tempShipPosition, boolean AIon) {
 
         tryAgain = true;
@@ -38,9 +40,10 @@ public class BattleHandler extends ShipsController {
 
 
         if (wasHit) {
-            //
             if(AIon){AfterHit();}
 
+            if (AIon){statsArr.set(2, statsArr.get(2)+1);}
+            else {statsArr.set(3, statsArr.get(3)+1);}
 
             FeedbackString = "Zásah nepřátelké lodě!";
             ImageView hit = new ImageView("Hit.png");
@@ -82,12 +85,14 @@ public class BattleHandler extends ShipsController {
             if (sunken) {
                 if(AIon){AfterSunk();}
                 FeedbackString = "Potopená loď!";
+                sunkPos = Num;
 
 
                 tempSunken += tempShipPosition.get(Num).size();
 
-                for (int i = 0; i < tempShipPosition.get(Num).size(); i++) {
 
+                for (int i = 0; i < tempShipPosition.get(Num).size(); i++) {
+                    /** Sprite potopení*/
                     ImageView sunk = new ImageView("Sunk.png");
                     sunk.setFitHeight(tempGrid.getPrefHeight() / tempGrid.getColumnCount());
                     sunk.setFitWidth(tempGrid.getPrefWidth() / tempGrid.getRowCount());
@@ -99,7 +104,7 @@ public class BattleHandler extends ShipsController {
             }
 
         } else {
-            FeedbackString = "Nebyla trefena žádná loď.";
+            if(!AIon) {FeedbackString = "Nebyla trefena žádná loď.";}
             ImageView miss = new ImageView("Miss.png");
             miss.setFitHeight(tempGrid.getPrefHeight() / tempGrid.getColumnCount());
             miss.setFitWidth(tempGrid.getPrefWidth() / tempGrid.getRowCount());

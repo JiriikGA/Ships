@@ -19,7 +19,7 @@ public class BotAlgorithm extends BattleHandler {
     static boolean up;
     static boolean down;
 
-
+    //TODO dead end check (2free squares & only 3long ship left)
     static void BotAttack() {
         if (destroyShip) {
             DestroyShip();
