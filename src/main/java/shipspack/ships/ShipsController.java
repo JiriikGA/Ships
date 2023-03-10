@@ -1,13 +1,10 @@
 package shipspack.ships;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,15 +17,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
+
 
 
 public class ShipsController  {
@@ -96,7 +89,8 @@ public class ShipsController  {
     private Button sh4min;
     @FXML
     private Button sh5min;
-
+    @FXML
+    private Button initializeBut;
     @FXML
     private Button toMenuBut;
     @FXML
@@ -107,18 +101,33 @@ public class ShipsController  {
     private Pane enemyPane;
     @FXML
     private HBox buildBox;
+
+    //STATS
     @FXML
     private Button statsBut;
     @FXML
     private Pane statsPane;
+    @FXML
+    private Label statLab0;
+    @FXML
+    private Label statLab1;
+    @FXML
+    private Label statLab2;
+    @FXML
+    private Label statLab3;
+    @FXML
+    private Label statLab4;
+    @FXML
+    private Label statLab5;
+    @FXML
+    private Label statLab6;
+    @FXML
+    private Label statLabResult;
 
-    //testing
+
+    //TODO smazat testing
     ArrayList<Integer> testList = new ArrayList<>();
 
-
-    static GridPane tempGrid = new GridPane();
-    static coordinates currentCoordinates = new coordinates(-1, -1);
-    static String FeedbackString;
 
     //temp
     static ArrayList<coordinates> tempBlockedList = new ArrayList<>();
@@ -135,35 +144,41 @@ public class ShipsController  {
     public ArrayList<coordinates> AIBlockedList = new ArrayList<>();
     public ArrayList<Integer> AIShipNumberList = new ArrayList<>();
 
+    //Default
+    static int row = 10;
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+    static int totalShips;
+    static ArrayList<Double> statsArr = new ArrayList<>();
+    static GridPane tempGrid = new GridPane();
+    static coordinates currentCoordinates = new coordinates(-1, -1);
+    static String FeedbackString;
+    int fullness;
+
     //Values
     static int shipLength = 4;
-    static int row = 10;
     static Boolean rotated = true;
-    Boolean AIon = false;
+
     static Boolean visible = false;
     static Boolean tryAgain = true;
     static Boolean spyMode = false;
-    int fullness;
-    static ArrayList<Integer> statsArr = new ArrayList<>();
 
-    static int AIsunken = 0;
-    static int PlayerSunken = 0;
+    static int result = 0;
+    int AISunken = 0;
+    int PlayerSunken = 0;
     static int tempSunken = 0;
     int selectedMode = 0;
-    static int totalShips = 0;
     boolean firstStart = true;
-
+    boolean AIon = false;
     int gameMode = 0;
-    static int ships1 = 1;
-    static int ships2 = 2;
+    static int ships1 = 0;
+    static int ships2 = 3;
     static int ships3 = 1;
     static int ships4 = 2;
     static int ships5 = 1;
 
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
 
 
 
@@ -175,7 +190,7 @@ public class ShipsController  {
         stage.setScene(scene);
         stage.show();
 
-        stage.setTitle("Ships - Game (beta v0.3)");
+        stage.setTitle("Ships - Game (beta v0.5)");
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
@@ -183,6 +198,26 @@ public class ShipsController  {
     }
 
     public void ToMenu(ActionEvent event) throws IOException {
+        statsArr.clear();
+        result = 0;
+        enemyGrid.getChildren().clear();
+        grid.getChildren().clear();
+        rotated = true;
+
+        shipNumberList.clear();
+        blockedList.clear();
+        shipPosition.clear();
+
+        AIShipPosition.clear();
+        AIBlockedList.clear();
+        AIShipNumberList.clear();
+
+        ships1 = 0;
+        ships2 = 3;
+        ships3 = 1;
+        ships4 = 2;
+        ships5 = 1;
+
         System.out.println("Changing scene to menu");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Menu&Settings.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -190,18 +225,47 @@ public class ShipsController  {
         stage.setScene(scene);
         stage.show();
 
-        stage.setTitle("Ships - Menu (beta v0.3)");
+        stage.setTitle("Ships - Menu (beta v0.5)");
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
 
 
     }
+    @FXML
+    private Button switchBut;
 
     public void ToStats() {
         if(!statsPane.isVisible()){statsBut.setText("Zavřít statistiky");}
         else statsBut.setText("Podívat se na statistiky");
         statsPane.setVisible(!statsPane.isVisible());
+
+        switch (result) {
+            case -1 -> {
+                statLabResult.setText("Vítězství - Počítač");
+                switchBut.setVisible(true);
+            }
+            case 0 -> {
+                statLabResult.setText("Hra v průběhu");
+                switchBut.setVisible(false);
+            }
+            case 1 -> {
+                statLabResult.setText("Vítězství - Hráč");
+                switchBut.setVisible(true);
+            }
+            case 2 -> {
+                statLabResult.setText("Remíza");
+                switchBut.setVisible(true);
+            }
+        }
+
+        statLab0.setText(String.valueOf(Math.round(statsArr.get(0))));
+        statLab1.setText(String.valueOf(Math.round(statsArr.get(1))));
+        statLab2.setText(String.valueOf(Math.round(statsArr.get(2))));
+        statLab3.setText(String.valueOf(Math.round(statsArr.get(3))));
+        statLab4.setText("Tah "+Math.round(statsArr.get(4)));
+        statLab5.setText(Math.round(statsArr.get(2)/statsArr.get(0)*100) + "%");
+        statLab6.setText(Math.round(statsArr.get(3)/statsArr.get(1)*100) + "%");
 
     }
 
@@ -211,54 +275,35 @@ public class ShipsController  {
         char num = sourceButton.getId().charAt(2);
         char change = sourceButton.getId().charAt(3);
 
-        if (num == '1') {
-            if (change == 'm') {
+        switch (num)
+        {
+            case '1':if (change == 'm') {
                 ships1 -= 1;
-                System.out.println(ships1);
             } else ships1 += 1;
-
-        }
-
-        if (num == '2') {
-            if (change == 'm') {
+            break;
+            case '2':if (change == 'm') {
                 ships2 -= 1;
-                System.out.println(ships2);
             } else ships2 += 1;
-
-        }
-
-        if (num == '3') {
-            if (change == 'm') {
+                break;
+            case '3':if (change == 'm') {
                 ships3 -= 1;
-                System.out.println(ships3);
             } else ships3 += 1;
-
-        }
-
-        if (num == '4') {
-            if (change == 'm') {
+                break;
+            case '4':if (change == 'm') {
                 ships4 -= 1;
-                System.out.println(ships4);
             } else ships4 += 1;
-
-        }
-
-        if (num == '5') {
-            if (change == 'm') {
+                break;
+            case '5':if (change == 'm') {
                 ships5 -= 1;
-                System.out.println(ships5);
             } else ships5 += 1;
-
+                break;
         }
 
 
         //zaplnenost (n+2)*3
         fullness = ships1 * 6 + ships2 * 9 + ships3 * 12 + ships4 * 15 + ships5 * 18;
         System.out.println(fullness);
-        if (fullness <= 0) {
-            toMenuBut.setDisable(true);
-        } else toMenuBut.setDisable(false);
-
+        toMenuBut.setDisable(fullness <= 0);
 
         sh1min.setDisable(ships1 == 0);
         sh2min.setDisable(ships2 == 0);
@@ -289,32 +334,35 @@ public class ShipsController  {
     public void modeControll() {
 
         selectedMode++;
+
         if (selectedMode > 5) {
             selectedMode = 0;
         }
-        if (selectedMode == 0) {
-            gameMode = 0;
-            ModeButton.setText("Herní mód: Flotila");
-        }
-        if (selectedMode == 1) {
-            gameMode = 1;
-            ModeButton.setText("Herní mód: Tradiční");
-        }
-        if (selectedMode == 2) {
-            gameMode = 2;
-            ModeButton.setText("Herní mód: Tradiční - M. Bradley");
-        }
-        if (selectedMode == 3) {
-            gameMode = 3;
-            ModeButton.setText("Herní mód: Ruská");
-        }
-        if (selectedMode == 4) {
-            gameMode = 4;
-            ModeButton.setText("Herní mód: Loterie");
-        }
-        if (selectedMode == 5) {
-            gameMode = 5;
-            ModeButton.setText("Herní mód: Vlastní");
+        switch (selectedMode) {
+            case 0 -> {
+                gameMode = 0;
+                ModeButton.setText("Herní mód: Flotila");
+            }
+            case 1 -> {
+                gameMode = 1;
+                ModeButton.setText("Herní mód: Tradiční");
+            }
+            case 2 -> {
+                gameMode = 2;
+                ModeButton.setText("Herní mód: Tradiční - M. Bradley");
+            }
+            case 3 -> {
+                gameMode = 3;
+                ModeButton.setText("Herní mód: Ruská");
+            }
+            case 4 -> {
+                gameMode = 4;
+                ModeButton.setText("Herní mód: Loterie");
+            }
+            case 5 -> {
+                gameMode = 5;
+                ModeButton.setText("Herní mód: Vlastní");
+            }
         }
 
 
@@ -343,64 +391,55 @@ public class ShipsController  {
         }
 
 
-        //Mody hry
-        // FLotila
-        if (gameMode == 0) {
-            ships1 = 0;
-            ships2 = 3;
-            ships3 = 1;
-            ships4 = 2;
-            ships5 = 1;
+        //Mody hry: FLotila, Tradicni, Tradicni M. Bradley 1990, Ruská, Loterie, Vlastní
+
+        switch (gameMode) {
+            case 0 -> {
+                ships1 = 0;
+                ships2 = 3;
+                ships3 = 1;
+                ships4 = 2;
+                ships5 = 1;
+            }
+            case 1 -> {
+                ships1 = 2;
+                ships2 = 4;
+                ships3 = 2;
+                ships4 = 1;
+                ships5 = 0;
+            }
+            case 2 -> {
+                ships1 = 0;
+                ships2 = 1;
+                ships3 = 1;
+                ships4 = 1;
+                ships5 = 1;
+            }
+            case 3 -> {
+                ships1 = 4;
+                ships2 = 3;
+                ships3 = 2;
+                ships4 = 1;
+                ships5 = 0;
+            }
+            case 4 -> {
+                ships1 = 1;
+                ships2 = 0;
+                ships3 = 0;
+                ships4 = 0;
+                ships5 = 0;
+            }
+            case 5 -> {
+                ships1 = 0;
+                ships2 = 0;
+                ships3 = 0;
+                ships4 = 0;
+                ships5 = 0;
+            }
         }
 
-        //Tradicni
-        if (gameMode == 1) {
-            ships1 = 2;
-            ships2 = 4;
-            ships3 = 2;
-            ships4 = 1;
-            ships5 = 0;
-        }
-
-        //tradicni M. Bradley 1990
-        if (gameMode == 2) {
-            ships1 = 0;
-            ships2 = 1;
-            ships3 = 1;
-            ships4 = 1;
-            ships5 = 1;
-        }
-
-        //Ruská
-        if (gameMode == 3) {
-            ships1 = 4;
-            ships2 = 3;
-            ships3 = 2;
-            ships4 = 1;
-            ships5 = 0;
-        }
-
-        //Loterie
-        if (gameMode == 4) {
-            ships1 = 1;
-            ships2 = 0;
-            ships3 = 0;
-            ships4 = 0;
-            ships5 = 0;
-        }
-
-        // test
-        if (gameMode == 5) {
-            ships1 = 0;
-            ships2 = 0;
-            ships3 = 0;
-            ships4 = 0;
-            ships5 = 0;
-        }
 
         fullness = ships1 * 6 + ships2 * 9 + ships3 * 12 + ships4 * 15 + ships5 * 18;
-        System.out.println(fullness);
-
         fullnessLabel.setText(fullness + "%");
         fullnessBar.setProgress((double) fullness / 100);
 
@@ -419,9 +458,7 @@ public class ShipsController  {
         if (ships5 == 0) {
             sh5min.setDisable(true);
         }
-        if (fullness <= 0) {
-            toMenuBut.setDisable(true);
-        } else toMenuBut.setDisable(false);
+        toMenuBut.setDisable(fullness <= 0);
 
         Preview0.setText(String.valueOf(ships1));
         Preview1.setText(String.valueOf(ships2));
@@ -433,9 +470,6 @@ public class ShipsController  {
 
 
     @FXML
-    private Button initializeBut;
-
-    @FXML
     void firstStart() {
 
         if (!firstStart) {
@@ -444,10 +478,9 @@ public class ShipsController  {
         firstStart = false;
         initializeBut.setVisible(false);
         RotateButton.setText("");
-
         //grid.setStyle("-fx-background-image: url('Water.png')");
 
-        //test
+        //TODO test pryč
         for (int i = 0; i < 14; i++) {
             testList.add(i, 0);
         }
@@ -456,7 +489,7 @@ public class ShipsController  {
         System.out.println("total ships =" + totalShips);
 
         for (int i = 0; i < 5; i++) {
-            statsArr.add(i,0);
+            statsArr.add(i,0.0);
         }
 
 
@@ -572,7 +605,6 @@ public class ShipsController  {
     protected void Rotate() {
         RotateButton.setText("");
         rotated = !rotated;
-        System.out.println("rotated = " + rotated);
         if (rotated) {
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
         } else
@@ -587,7 +619,7 @@ public class ShipsController  {
     public void SelectShip(ActionEvent event) {
         Button sourceButton = (Button) event.getSource();
         char number = sourceButton.getId().charAt(6);
-        firstStart();/////////////////////////////////////////
+        firstStart();/////////////////////////////////////////TODO initialize button
         shipLength = Character.getNumericValue(number);
     }
 
@@ -629,9 +661,7 @@ public class ShipsController  {
     @FXML
     public void Switch() {
         visible = !visible;
-
         int totalShips = 0;
-
 
         if (visible) {
             for (int i = 0; i < AIShipPosition.size(); i++) {
@@ -653,9 +683,7 @@ public class ShipsController  {
 
             }
             enemyGrid.getChildren().remove(row * row + 1 + blockedList.size() + PlayerSunken, row * row + 1 + totalShips + blockedList.size() + PlayerSunken);
-
         }
-
     }
 
 
@@ -663,7 +691,6 @@ public class ShipsController  {
     public void Refresh() {
 
         Feedback.setText(FeedbackString);
-
         if(!grid.isDisabled())
         {
         Ships1.setText(String.valueOf(shipNumberList.get(0)));
@@ -679,7 +706,7 @@ public class ShipsController  {
     @FXML
     public void ClearBoard() {
 
-        //test
+        //TODO smazat test
        /* for (int j = 0; j < shipPosition.size(); j++) {
 
             if (ContainsThisCoords(shipPosition.get(j), new coordinates(0, 0))) {
@@ -730,7 +757,6 @@ public class ShipsController  {
         */
 
         grid.getChildren().remove(row * row + 1, grid.getChildren().size());
-
         blockedList.clear();
         AIBlockedList.clear();
 
@@ -749,7 +775,7 @@ public class ShipsController  {
             tempGrid = grid;
             tempShipPosition = shipPosition;
             tempBlockedList = AIBlockedList;
-            tempSunken = AIsunken;
+            tempSunken = AISunken;
 
         } else {
             tempGrid = enemyGrid;
@@ -770,37 +796,59 @@ public class ShipsController  {
         //zmena zbyvajicich lodi a statistik
         if(sunkPos != -1)
         {
-            System.out.println("potopeno velikost " + tempShipPosition.get(sunkPos).size() + " hrace " + AIon);
+            //System.out.println("potopeno velikost " + tempShipPosition.get(sunkPos).size() + " hrace " + AIon);
             if(AIon)
             {
-                if(tempShipPosition.get(sunkPos).size() == 1) {Ships1.setText(String.valueOf(Integer.parseInt(Ships1.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 2) {Ships2.setText(String.valueOf(Integer.parseInt(Ships2.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 3) {Ships3.setText(String.valueOf(Integer.parseInt(Ships3.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 4) {Ships4.setText(String.valueOf(Integer.parseInt(Ships4.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 5) {Ships5.setText(String.valueOf(Integer.parseInt(Ships5.getText())-1));}
+                switch (tempShipPosition.get(sunkPos).size()) {
+                    case 1 -> {
+                        Ships1.setText(String.valueOf(Integer.parseInt(Ships1.getText()) - 1));
+                    }
+                    case 2 -> {
+                        Ships2.setText(String.valueOf(Integer.parseInt(Ships2.getText()) - 1));
+                    }
+                    case 3 -> {
+                        Ships3.setText(String.valueOf(Integer.parseInt(Ships3.getText()) - 1));
+                    }
+                    case 4 -> {
+                        Ships4.setText(String.valueOf(Integer.parseInt(Ships4.getText()) - 1));
+                    }
+                    case 5 -> {
+                        Ships5.setText(String.valueOf(Integer.parseInt(Ships5.getText()) - 1));
+                    }
+                }
             }
             else
             {
-                if(tempShipPosition.get(sunkPos).size() == 1) {Ships1AI.setText(String.valueOf(Integer.parseInt(Ships1AI.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 2) {Ships2AI.setText(String.valueOf(Integer.parseInt(Ships2AI.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 3) {Ships3AI.setText(String.valueOf(Integer.parseInt(Ships3AI.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 4) {Ships4AI.setText(String.valueOf(Integer.parseInt(Ships4AI.getText())-1));}
-                if(tempShipPosition.get(sunkPos).size() == 5) {Ships5AI.setText(String.valueOf(Integer.parseInt(Ships5AI.getText())-1));}
+                switch (tempShipPosition.get(sunkPos).size()) {
+                    case 1 -> {
+                        Ships1AI.setText(String.valueOf(Integer.parseInt(Ships1AI.getText()) - 1));
+                    }
+                    case 2 -> {
+                        Ships2AI.setText(String.valueOf(Integer.parseInt(Ships2AI.getText()) - 1));
+                    }
+                    case 3 -> {
+                        Ships3AI.setText(String.valueOf(Integer.parseInt(Ships3AI.getText()) - 1));
+                    }
+                    case 4 -> {
+                        Ships4AI.setText(String.valueOf(Integer.parseInt(Ships4AI.getText()) - 1));
+                    }
+                    case 5 -> {
+                        Ships5AI.setText(String.valueOf(Integer.parseInt(Ships5AI.getText()) - 1));
+                    }
+                }
+
             }
         }
-            sunkPos = -1;
+        sunkPos = -1;
 
-        if(AIon){statsArr.set(0,statsArr.get(0)+1);}
-        else {statsArr.set(1,statsArr.get(1)+1);}
 
-        System.out.println(statsArr);
 
         /** Vrácení hodnot do daných listů*/
         if (AIon) {
             grid = tempGrid;
             shipPosition = tempShipPosition;
             AIBlockedList = tempBlockedList;
-            AIsunken = tempSunken;
+            AISunken = tempSunken;
 
         } else {
             enemyGrid = tempGrid;
@@ -841,18 +889,14 @@ public class ShipsController  {
 
         RandomBuild();
 
-        tempBlockedList.clear();
         blockedList.clear();
         AIBlockedList.clear();
 
         AIon = false;
-
-
-
         spy_button.setDisable(!spyMode);
 
 
-        //TODO - prechod z build modu do battle modu
+        /**prechod z build modu do battle modu*/
 
         enemyGrid.setDisable(false);
         statsBut.setVisible(true);
@@ -874,12 +918,6 @@ public class ShipsController  {
         Ships3AI.setText(String.valueOf((ships3)));
         Ships4AI.setText(String.valueOf((ships4)));
         Ships5AI.setText(String.valueOf((ships5)));
-
-
-
-
-
-
     }
 
 
@@ -892,7 +930,6 @@ public class ShipsController  {
         } else {
             tempShipNumberList = shipNumberList;
         }
-
 
         for (int num = 4; num >= 0; num--) {
             while (tempShipNumberList.get(num) != 0) {
@@ -912,30 +949,55 @@ public class ShipsController  {
 
 
     void BattleController() {
-        ShootShip();
 
+        //PLAYER TURN
+        ShootShip();
         if (tryAgain) {
             return;
         }
-
-        AIon = true;
         statsArr.set(4,statsArr.get(4)+1);
+        System.out.println(statsArr);
 
+
+        //WIN CHECK
+        if(result != 0)
+        {
+            System.out.println(result);
+            enemyGrid.setDisable(true);
+            ToStats();
+            return;
+        }
+
+
+        //AI TURN
+        AIon = true;
         tryAgain = true;
         while (tryAgain) {
             BotAlgorithm.BotAttack();
             ShootShip();
         }
+
+        //SET TO DEFAULT
         AIon = false;
         statsArr.set(4,statsArr.get(4)+1);
+        System.out.println(statsArr);
+
+
+        //WIN CHECK
+        if(result != 0)
+        {
+            System.out.println(result);
+            ToStats();
+            enemyGrid.setDisable(true);
+        }
     }
 
 
 
     public static Boolean ContainsThisCoords(ArrayList<coordinates> coordsArray, coordinates finding) {
         //System.out.println("checking coordinates " + finding);
-        for (int i = 0; i < coordsArray.size(); i++) {
-            if (finding.x == coordsArray.get(i).x && finding.y == coordsArray.get(i).y) {
+        for (shipspack.ships.coordinates coordinates : coordsArray) {
+            if (finding.x == coordinates.x && finding.y == coordinates.y) {
                 return true;
             }
         }
@@ -950,14 +1012,13 @@ public class ShipsController  {
     }
 
 
-    //test
+    //TODO test znicit
     @FXML
     public void Test() {
         for (int i = 0; i < 57412; i++) {
             RandomBuild();
             ClearBoard();
         }
-
     }
 
 
@@ -965,9 +1026,6 @@ public class ShipsController  {
     {
        System.exit(0);
     }
-
-
-
 
 }
 

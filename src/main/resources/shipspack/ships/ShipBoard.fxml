@@ -260,7 +260,7 @@
             </HBox>
             <Pane fx:id="statsPane" layoutX="103.0" layoutY="252.0" prefHeight="622.0" prefWidth="1211.0" style="-fx-background-color: ffffff;" visible="false">
                <children>
-                  <Label layoutX="403.0" layoutY="25.0" text="Vítězství - počítač">
+                  <Label fx:id="statLabResult" layoutX="403.0" layoutY="25.0" text="Vítězství - počítač">
                      <font>
                         <Font size="52.0" />
                      </font>
@@ -290,42 +290,42 @@
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Button layoutX="505.0" layoutY="467.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="202.0" text="Odhalit protihráče">
+                  <Button fx:id="switchBut" layoutX="505.0" layoutY="467.0" mnemonicParsing="false" onAction="#Switch" prefHeight="100.0" prefWidth="202.0" text="Odhalit protihráče">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Button>
-                  <Label fx:id="roundLab" layoutX="505.0" layoutY="100.0" text="Tah ">
+                  <Label fx:id="statLab4" layoutX="505.0" layoutY="100.0" text="Tah ">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="386.0" layoutY="235.0" text="12">
+                  <Label fx:id="statLab1" layoutX="386.0" layoutY="235.0" text="12">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="764.0" layoutY="235.0" text="12">
+                  <Label fx:id="statLab0" layoutX="764.0" layoutY="235.0" text="12">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="764.0" layoutY="311.0" text="12">
+                  <Label fx:id="statLab2" layoutX="764.0" layoutY="311.0" text="12">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="764.0" layoutY="373.0" text="12%">
+                  <Label fx:id="statLab5" layoutX="764.0" layoutY="373.0" text="12%">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="386.0" layoutY="311.0" text="12">
+                  <Label fx:id="statLab3" layoutX="386.0" layoutY="311.0" text="12">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <Label layoutX="386.0" layoutY="373.0" text="12%">
+                  <Label fx:id="statLab6" layoutX="386.0" layoutY="373.0" text="12%">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>

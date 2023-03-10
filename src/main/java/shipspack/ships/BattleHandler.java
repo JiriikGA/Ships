@@ -1,10 +1,10 @@
 package shipspack.ships;
 
+
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import static shipspack.ships.BotAlgorithm.AfterHit;
 import static shipspack.ships.BotAlgorithm.AfterSunk;
@@ -24,6 +24,9 @@ public class BattleHandler extends ShipsController {
             return;
         }
         tryAgain = false;
+
+        if(AIon){statsArr.set(0,statsArr.get(0)+1);}
+        else {statsArr.set(1,statsArr.get(1)+1);}
 
 
         /** Kontrola zásahu*/
@@ -55,26 +58,26 @@ public class BattleHandler extends ShipsController {
             tryAgain = true;
 
             int sunkNum = 0;
-            int Num = -1;
+            int num = -1;
             boolean sunken = false;
 
             /**Vyhledání pozice arraylistu v arraylistu a potopeni lode*/
             for (int i = 0; i < tempShipPosition.size(); i++) {
                 for (int j = 0; j < tempShipPosition.get(i).size(); j++) {
                     if (currentCoordinates.x == tempShipPosition.get(i).get(j).x && currentCoordinates.y == tempShipPosition.get(i).get(j).y) {
-                        Num = i;
+                        num = i;
                         break;
                     }
                 }
             }
 
 
-            for (int k = 0; k < tempShipPosition.get(Num).size(); k++) {
+            for (int k = 0; k < tempShipPosition.get(num).size(); k++) {
                 for (int l = 0; l < tempBlockedList.size(); l++) {
                     //System.out.println(tempShipPosition.get(Num).get(k).toString()+ " "+ tempBlockedList.toString());
-                    if (tempBlockedList.get(l).x == tempShipPosition.get(Num).get(k).x && tempBlockedList.get(l).y == tempShipPosition.get(Num).get(k).y) {
+                    if (tempBlockedList.get(l).x == tempShipPosition.get(num).get(k).x && tempBlockedList.get(l).y == tempShipPosition.get(num).get(k).y) {
                         sunkNum++;
-                        if (sunkNum == tempShipPosition.get(Num).size()) {
+                        if (sunkNum == tempShipPosition.get(num).size()) {
                             sunken = true;
                         }
                     }
@@ -85,22 +88,20 @@ public class BattleHandler extends ShipsController {
             if (sunken) {
                 if(AIon){AfterSunk();}
                 FeedbackString = "Potopená loď!";
-                sunkPos = Num;
+                sunkPos = num;
 
+                tempSunken += tempShipPosition.get(num).size();
 
-                tempSunken += tempShipPosition.get(Num).size();
-
-
-                for (int i = 0; i < tempShipPosition.get(Num).size(); i++) {
+                for (int i = 0; i < tempShipPosition.get(num).size(); i++) {
                     /** Sprite potopení*/
                     ImageView sunk = new ImageView("Sunk.png");
                     sunk.setFitHeight(tempGrid.getPrefHeight() / tempGrid.getColumnCount());
                     sunk.setFitWidth(tempGrid.getPrefWidth() / tempGrid.getRowCount());
                     sunk.setStyle("-fx-background-color:transparent; -fx-background-size: cover; -fx-opacity: 1;");
-                    tempGrid.add(sunk, tempShipPosition.get(Num).get(i).x, tempShipPosition.get(Num).get(i).y);
-                    VictoryCheck();
-                }
+                    tempGrid.add(sunk, tempShipPosition.get(num).get(i).x, tempShipPosition.get(num).get(i).y);
 
+                }
+                VictoryCheck(AIon);
             }
 
         } else {
@@ -110,18 +111,24 @@ public class BattleHandler extends ShipsController {
             miss.setFitWidth(tempGrid.getPrefWidth() / tempGrid.getRowCount());
             miss.setStyle("-fx-background-color:transparent; -fx-background-size: cover; -fx-opacity: 1;");
             tempGrid.add(miss, currentCoordinates.x, currentCoordinates.y);
-
         }
     }
 
 
-    static void VictoryCheck() {
+    static void VictoryCheck(boolean AIon) {
 
-        if (tempSunken == totalShips) {
-            FeedbackString = "Vítězství";
+        if (tempSunken == totalShips && AIon) {
+            FeedbackString = "Prohra";
             tryAgain=false;
+            result = -1;
         }
 
+
+        if (tempSunken == totalShips && !AIon ) {
+            FeedbackString = "Vítězství";
+            tryAgain=false;
+            result = 1;
+        }
     }
 }
 

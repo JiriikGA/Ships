@@ -1,11 +1,5 @@
 package shipspack.ships;
 
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
 import java.util.Random;
 
 public class BotAlgorithm extends BattleHandler {
@@ -55,7 +49,7 @@ public class BotAlgorithm extends BattleHandler {
                     //left
                     /** zmena poradi pivotů */
                     coordinates temp = new coordinates(Pivot2.x, Pivot2.y);
-                    System.out.println("provedena zmena - X");
+                    //System.out.println("provedena zmena - X");
                     Pivot2.set(Pivot.x, Pivot.y);
                     Pivot.set(temp.x, temp.y);
 
@@ -84,7 +78,7 @@ public class BotAlgorithm extends BattleHandler {
                 /** zmena poradi pivotů */
                 if (Pivot2.y > Pivot.y) {
                     coordinates temp = new coordinates(Pivot2.x, Pivot2.y);
-                    System.out.println("provedena zmena - Y");
+                    //System.out.println("provedena zmena - Y");
                     Pivot2.set(Pivot.x, Pivot.y);
                     Pivot.set(temp.x, temp.y);
                 }
@@ -213,14 +207,14 @@ public class BotAlgorithm extends BattleHandler {
         /** Krok II.b - DOoznacit pivot 2 */
         if (Pivot2.x == -1 && Pivot2.y == -1 && Pivot.x != -1 && Pivot.y != -1 && wasHit) {
             Pivot2.set(currentCoordinates.x, currentCoordinates.y);
-            System.out.println(Pivot2 + " pivot 2 is finaly hereeeeeee");
+            System.out.println("Pivot2 = " + Pivot2);
             System.out.println("Pivot = " + Pivot);
         }
 
 
 
-        System.out.println("Pivot AS= " + Pivot);
-        System.out.println("Pivot2 AS= " + Pivot2);
+        //System.out.println("Pivot AS= " + Pivot);
+        //System.out.println("Pivot2 AS= " + Pivot2);
 
         if (Pivot.x - Pivot2.x != 0) {
             shipLength = Pivot.x - Pivot2.x + 1;
@@ -250,7 +244,7 @@ public class BotAlgorithm extends BattleHandler {
                 if ((Pivot2.x - 1 + j) <= row - 1 && (Pivot2.x - 1 + j) >= 0 && (Pivot2.y - 1 + g) <= row - 1 && (Pivot2.y - 1 + g) >= 0) {
                     if (!ContainsThisCoords(tempBlockedList, new coordinates(Pivot2.x - 1 + j, Pivot2.y - 1 + g))) {
                         tempBlockedList.add(new coordinates(Pivot2.x - 1 + j, Pivot2.y - 1 + g));
-                        System.out.println("blocking coords - " + new coordinates(Pivot2.x - 1 + j, Pivot2.y - 1 + g));
+                        //System.out.println("blocking coords - " + new coordinates(Pivot2.x - 1 + j, Pivot2.y - 1 + g));
                     }
                 }
 
@@ -259,9 +253,7 @@ public class BotAlgorithm extends BattleHandler {
                     j = g;
                     g = temp;
                 }
-
             }
-
         }
 
         //reset bot algo values
