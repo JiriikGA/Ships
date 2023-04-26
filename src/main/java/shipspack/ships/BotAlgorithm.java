@@ -1,17 +1,20 @@
 package shipspack.ships;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BotAlgorithm extends BattleHandler {
 
-    static coordinates Pivot = new coordinates(-1,-1);
+    static coordinates Pivot = new coordinates(-1, -1);
     static coordinates Pivot2 = new coordinates(-1, -1);
-    static coordinates Offset = new coordinates(0, 0);
+    //static coordinates Offset = new coordinates(0, 0);
 
     static boolean left;
     static boolean right;
     static boolean up;
     static boolean down;
+
+
 
     //TODO dead end check (2free squares & only 3long ship left)
     static void BotAttack() {
@@ -20,17 +23,120 @@ public class BotAlgorithm extends BattleHandler {
             return;
         }
 
+        if(botStratInt == 0){RandomGuess();}
+        if(botStratInt == 1){Strateg();}
 
-        RandomGuess();
 
     }
 
     static void RandomGuess() {
         Random r = new Random();
-        currentCoordinates.x = r.nextInt(0, 10);
-        currentCoordinates.y = r.nextInt(0, 10);
-        System.out.println(currentCoordinates.toString());
+
+        if (targets.size() == 0) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    targets.add(new coordinates(i, j));
+                }
+            }
+
+        }
+
+        //target check
+        for (int i = 0; i < targets.size(); i++) {
+            if (ContainsThisCoords(tempBlockedList, targets.get(i))) {
+                targets.remove(i);
+                break;
+            }
+        }
+
+        //targets select
+        int rand = r.nextInt(0, targets.size());
+        currentCoordinates = new coordinates(targets.get(rand).x, targets.get(rand).y);
+
     }
+
+
+    static int faze = 0;
+
+    static void Strateg() {
+        Random r = new Random();
+
+        //target check
+        for (int i = 0; i < targets.size(); i++) {
+            if (ContainsThisCoords(tempBlockedList, targets.get(i))) {
+                targets.remove(i);
+                break;
+            }
+        }
+
+
+        if (targets.size() == 0) {
+            faze++;
+        }
+
+
+        //Faze 1;
+        if (faze == 1 && targets.size() == 0) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 3; j++) {
+
+                    if (i % 2 == 0) {
+                        targets.add(new coordinates(i * 2 + xOffset, j * 4 + yOffset));
+                    }
+                    if (i % 2 != 0 && j * 4 + 2 + yOffset < 10)
+                        targets.add(new coordinates(i * 2 + xOffset, j * 4 + 2 + yOffset));
+
+                }
+            }
+        }
+
+        //Faze 2
+        if (faze == 2 && targets.size() == 0) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    targets.add(new coordinates(i * 2 + (1 - xOffset), j * 2 + (1 - yOffset)));
+                }
+            }
+        }
+
+        //Faze 3
+        if (faze == 3 && targets.size() == 0) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 3; j++) {
+
+                    if (i % 2 == 0 && j * 4 + 2 + yOffset < 10) {
+                        targets.add(new coordinates(i * 2 + xOffset, j * 4 + 2 + yOffset));
+                    }
+                    if (i % 2 != 0)
+                        targets.add(new coordinates(i * 2 + xOffset, j * 4 + yOffset));
+
+                }
+            }
+        }
+        //Faze 4
+        if (faze == 4 && targets.size() == 0) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 5; j++) {
+                    //if(yOffset - xOffset == 0){targets.add(new coordinates())}
+                    if (i % 2 == 0) {
+                        targets.add(new coordinates(i, j * 2 + (1 - ((yOffset - xOffset) * (yOffset - xOffset)))));
+                    }
+                    if (i % 2 != 0) {
+                        targets.add(new coordinates(i, j * 2 + ((yOffset - xOffset) * (yOffset - xOffset))));
+                    }
+
+
+                }
+            }
+        }
+
+        //targets select
+        int rand = r.nextInt(0, targets.size());
+        currentCoordinates = new coordinates(targets.get(rand).x, targets.get(rand).y);
+
+
+    }
+
 
     static void DestroyShip() {
 
@@ -98,7 +204,6 @@ public class BotAlgorithm extends BattleHandler {
                 }
             }
         }
-
 
 
         /** Krok I. najít pivot */
@@ -180,13 +285,12 @@ public class BotAlgorithm extends BattleHandler {
     }
 
 
-    public static void AfterHit()
-    {
+    public static void AfterHit() {
         System.out.println("Hit at currentCoordinates = " + currentCoordinates);
         destroyShip = true;
 
         // Zmena pivotu na zasahnute pole
-        if (Pivot.x != -1 && Pivot.y != -1 && Pivot2.x != -1 && Pivot2.y != -1 ) {
+        if (Pivot.x != -1 && Pivot.y != -1 && Pivot2.x != -1 && Pivot2.y != -1) {
             if (Pivot.x - Pivot2.x != 0) {
                 if (currentCoordinates.x - Pivot.x == 1) {
                     Pivot.set(currentCoordinates.x, currentCoordinates.y);
@@ -212,7 +316,6 @@ public class BotAlgorithm extends BattleHandler {
         }
 
 
-
         //System.out.println("Pivot AS= " + Pivot);
         //System.out.println("Pivot2 AS= " + Pivot2);
 
@@ -230,7 +333,7 @@ public class BotAlgorithm extends BattleHandler {
             for (int j = 0; j < (shipLength + 2); j++) {
 
 
-              if(g== 0 && j == 0){
+                if (g == 0 && j == 0) {
                     //System.out.println("top left coords - " + new coordinates(Pivot2.x - 1 + j, Pivot2.y - 1 + g));
                 }
 

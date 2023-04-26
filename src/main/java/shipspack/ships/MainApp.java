@@ -14,8 +14,8 @@ public class MainApp extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("Menu&Settings.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 1520, 980);
-        stage.setTitle("Ships - Menu (beta v0.5)");
+        Scene scene = new Scene(fxmlLoader.load(), 1600, 1000);
+        stage.setTitle("Ships - Menu");
         stage.setScene(scene);
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);

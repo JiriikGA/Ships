@@ -17,14 +17,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
 
-
-public class ShipsController  {
+public class ShipsController {
 
     @FXML
     public GridPane grid;
@@ -123,7 +123,10 @@ public class ShipsController  {
     private Label statLab6;
     @FXML
     private Label statLabResult;
-
+    @FXML
+    private ImageView BotIco;
+    @FXML
+    private Button BotStratBut;
 
     //TODO smazat testing
     ArrayList<Integer> testList = new ArrayList<>();
@@ -178,19 +181,22 @@ public class ShipsController  {
     static int ships4 = 2;
     static int ships5 = 1;
 
+    static int xOffset = 0;
+    static int yOffset = 0;
+    static ArrayList<coordinates> targets = new ArrayList<>();
 
-
+    static int botStratInt = 0;
 
 
     public void ToGame(ActionEvent event) throws IOException, InterruptedException {
         System.out.println("Changing scene to game");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ShipBoard.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, 1600, 1000);
         stage.setScene(scene);
         stage.show();
 
-        stage.setTitle("Ships - Game (beta v0.5)");
+        stage.setTitle("Ships - Game");
         stage.getIcons().add(new Image("Ships_ico.png"));
         stage.setMaximized(false);
         stage.resizableProperty().set(true);
@@ -218,10 +224,14 @@ public class ShipsController  {
         ships4 = 2;
         ships5 = 1;
 
+        botStratInt = 0;
+        targets.clear();
+        spyMode = false;
+
         System.out.println("Changing scene to menu");
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Menu&Settings.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, 1600, 1000);
         stage.setScene(scene);
         stage.show();
 
@@ -232,12 +242,14 @@ public class ShipsController  {
 
 
     }
+
     @FXML
     private Button switchBut;
 
     public void ToStats() {
-        if(!statsPane.isVisible()){statsBut.setText("Zavřít statistiky");}
-        else statsBut.setText("Podívat se na statistiky");
+        if (!statsPane.isVisible()) {
+            statsBut.setText("Zavřít statistiky");
+        } else statsBut.setText("Podívat se na statistiky");
         statsPane.setVisible(!statsPane.isVisible());
 
         switch (result) {
@@ -263,9 +275,9 @@ public class ShipsController  {
         statLab1.setText(String.valueOf(Math.round(statsArr.get(1))));
         statLab2.setText(String.valueOf(Math.round(statsArr.get(2))));
         statLab3.setText(String.valueOf(Math.round(statsArr.get(3))));
-        statLab4.setText("Tah "+Math.round(statsArr.get(4)));
-        statLab5.setText(Math.round(statsArr.get(2)/statsArr.get(0)*100) + "%");
-        statLab6.setText(Math.round(statsArr.get(3)/statsArr.get(1)*100) + "%");
+        statLab4.setText("Tah " + Math.round(statsArr.get(4)));
+        statLab5.setText(Math.round(statsArr.get(2) / statsArr.get(0) * 100) + "%");
+        statLab6.setText(Math.round(statsArr.get(3) / statsArr.get(1) * 100) + "%");
 
     }
 
@@ -275,27 +287,31 @@ public class ShipsController  {
         char num = sourceButton.getId().charAt(2);
         char change = sourceButton.getId().charAt(3);
 
-        switch (num)
-        {
-            case '1':if (change == 'm') {
-                ships1 -= 1;
-            } else ships1 += 1;
-            break;
-            case '2':if (change == 'm') {
-                ships2 -= 1;
-            } else ships2 += 1;
+        switch (num) {
+            case '1':
+                if (change == 'm') {
+                    ships1 -= 1;
+                } else ships1 += 1;
                 break;
-            case '3':if (change == 'm') {
-                ships3 -= 1;
-            } else ships3 += 1;
+            case '2':
+                if (change == 'm') {
+                    ships2 -= 1;
+                } else ships2 += 1;
                 break;
-            case '4':if (change == 'm') {
-                ships4 -= 1;
-            } else ships4 += 1;
+            case '3':
+                if (change == 'm') {
+                    ships3 -= 1;
+                } else ships3 += 1;
                 break;
-            case '5':if (change == 'm') {
-                ships5 -= 1;
-            } else ships5 += 1;
+            case '4':
+                if (change == 'm') {
+                    ships4 -= 1;
+                } else ships4 += 1;
+                break;
+            case '5':
+                if (change == 'm') {
+                    ships5 -= 1;
+                } else ships5 += 1;
                 break;
         }
 
@@ -326,6 +342,28 @@ public class ShipsController  {
         Preview2.setText(String.valueOf(ships3));
         Preview3.setText(String.valueOf(ships4));
         Preview4.setText(String.valueOf(ships5));
+
+    }
+
+
+    @FXML
+    public void BotStrat() {
+
+        BotIco.setStyle("-fx-background-size: cover;");
+        if (botStratInt == 1) {
+            botStratInt = -1;
+        }
+
+        botStratInt++;
+
+        if (botStratInt == 0) {
+            BotIco.setImage(new Image("BotR.png"));
+            BotStratBut.setText("Počítač: Náhodný");
+        }
+        if (botStratInt == 1) {
+            BotIco.setImage(new Image("BotS.png"));
+            BotStratBut.setText("Počítač: Strategický");
+        }
 
     }
 
@@ -480,18 +518,13 @@ public class ShipsController  {
         RotateButton.setText("");
         //grid.setStyle("-fx-background-image: url('Water.png')");
 
-        //TODO test pryč
-        for (int i = 0; i < 14; i++) {
-            testList.add(i, 0);
-        }
 
         totalShips = ships1 + 2 * ships2 + 3 * ships3 + 4 * ships4 + 5 * ships5;
         System.out.println("total ships =" + totalShips);
 
         for (int i = 0; i < 5; i++) {
-            statsArr.add(i,0.0);
+            statsArr.add(i, 0.0);
         }
-
 
 
         /** Pocet lodi*/
@@ -580,9 +613,9 @@ public class ShipsController  {
 
         //Rotate button CSS
         if (rotated) {
-            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-color:  #70d1ef ");
         } else
-            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-color:  #70d1ef  ");
 
         /** Nastavi pocet lodi*/
         shipNumberList.set(0, ships1);
@@ -595,10 +628,15 @@ public class ShipsController  {
         for (int i = 0; i < shipNumberList.size(); i++) {
             AIShipNumberList.set(i, shipNumberList.get(i));
         }
+
+
+        Random r = new Random();
+        xOffset = r.nextInt(0, 2);
+        yOffset = r.nextInt(0, 2);
+
+
         Refresh();
     }
-
-
 
 
     @FXML
@@ -609,8 +647,6 @@ public class ShipsController  {
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
         } else
             RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
-
-
 
 
     }
@@ -691,13 +727,12 @@ public class ShipsController  {
     public void Refresh() {
 
         Feedback.setText(FeedbackString);
-        if(!grid.isDisabled())
-        {
-        Ships1.setText(String.valueOf(shipNumberList.get(0)));
-        Ships2.setText(String.valueOf(shipNumberList.get(1)));
-        Ships3.setText(String.valueOf(shipNumberList.get(2)));
-        Ships4.setText(String.valueOf(shipNumberList.get(3)));
-        Ships5.setText(String.valueOf(shipNumberList.get(4)));
+        if (!grid.isDisabled()) {
+            Ships1.setText(String.valueOf(shipNumberList.get(0)));
+            Ships2.setText(String.valueOf(shipNumberList.get(1)));
+            Ships3.setText(String.valueOf(shipNumberList.get(2)));
+            Ships4.setText(String.valueOf(shipNumberList.get(3)));
+            Ships5.setText(String.valueOf(shipNumberList.get(4)));
         }
         FeedbackString = "";
     }
@@ -705,56 +740,6 @@ public class ShipsController  {
 
     @FXML
     public void ClearBoard() {
-
-        //TODO smazat test
-       /* for (int j = 0; j < shipPosition.size(); j++) {
-
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(0, 0))) {
-                testList.set(0, testList.get(0) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(2, 0))) {
-                testList.set(1, testList.get(1) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(4, 0))) {
-                testList.set(2, testList.get(2) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(0, 2))) {
-                testList.set(3, testList.get(3) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(2, 2))) {
-                testList.set(4, testList.get(4) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(4, 2))) {
-                testList.set(5, testList.get(5) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(0, 4))) {
-                testList.set(6, testList.get(6) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(2, 4))) {
-                testList.set(7, testList.get(7) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(4, 4))) {
-                testList.set(8, testList.get(8) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(1, 1))) {
-                testList.set(9, testList.get(9) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(1, 3))) {
-                testList.set(10, testList.get(10) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(3, 1))) {
-                testList.set(11, testList.get(11) + 1);
-            }
-            if (ContainsThisCoords(shipPosition.get(j), new coordinates(3, 3))) {
-                testList.set(12, testList.get(12) + 1);
-            }
-
-        }
-        testList.set(13, testList.get(13) + 1);
-        for (int i = 0; i < testList.size(); i++) {
-            System.out.println(i + " " + testList.get(i));
-        }
-        */
 
         grid.getChildren().remove(row * row + 1, grid.getChildren().size());
         blockedList.clear();
@@ -768,21 +753,46 @@ public class ShipsController  {
     }
 
     static int sunkPos = -1;
+
+
+    void SwitchTemp(boolean back) {
+
+        if (!back) {
+            if (AIon) {
+                tempGrid = grid;
+                tempShipPosition = shipPosition;
+                tempBlockedList = AIBlockedList;
+                tempSunken = AISunken;
+
+            } else {
+                tempGrid = enemyGrid;
+                tempShipPosition = AIShipPosition;
+                tempBlockedList = blockedList;
+                tempSunken = PlayerSunken;
+            }
+        } else {
+            /** Vrácení hodnot do daných listů*/
+            if (AIon) {
+                grid = tempGrid;
+                shipPosition = tempShipPosition;
+                AIBlockedList = tempBlockedList;
+                AISunken = tempSunken;
+
+            } else {
+                enemyGrid = tempGrid;
+                AIShipPosition = tempShipPosition;
+                blockedList = tempBlockedList;
+                PlayerSunken = tempSunken;
+
+            }
+        }
+    }
+
+
     void ShootShip() {
 
 
-        if (AIon) {
-            tempGrid = grid;
-            tempShipPosition = shipPosition;
-            tempBlockedList = AIBlockedList;
-            tempSunken = AISunken;
-
-        } else {
-            tempGrid = enemyGrid;
-            tempShipPosition = AIShipPosition;
-            tempBlockedList = blockedList;
-            tempSunken = PlayerSunken;
-        }
+        SwitchTemp(false);
 
 
         /** Spies order in grid*/
@@ -794,11 +804,9 @@ public class ShipsController  {
 
 
         //zmena zbyvajicich lodi a statistik
-        if(sunkPos != -1)
-        {
+        if (sunkPos != -1) {
             //System.out.println("potopeno velikost " + tempShipPosition.get(sunkPos).size() + " hrace " + AIon);
-            if(AIon)
-            {
+            if (AIon) {
                 switch (tempShipPosition.get(sunkPos).size()) {
                     case 1 -> {
                         Ships1.setText(String.valueOf(Integer.parseInt(Ships1.getText()) - 1));
@@ -816,9 +824,7 @@ public class ShipsController  {
                         Ships5.setText(String.valueOf(Integer.parseInt(Ships5.getText()) - 1));
                     }
                 }
-            }
-            else
-            {
+            } else {
                 switch (tempShipPosition.get(sunkPos).size()) {
                     case 1 -> {
                         Ships1AI.setText(String.valueOf(Integer.parseInt(Ships1AI.getText()) - 1));
@@ -842,21 +848,8 @@ public class ShipsController  {
         sunkPos = -1;
 
 
+        SwitchTemp(true);
 
-        /** Vrácení hodnot do daných listů*/
-        if (AIon) {
-            grid = tempGrid;
-            shipPosition = tempShipPosition;
-            AIBlockedList = tempBlockedList;
-            AISunken = tempSunken;
-
-        } else {
-            enemyGrid = tempGrid;
-            AIShipPosition = tempShipPosition;
-            blockedList = tempBlockedList;
-            PlayerSunken = tempSunken;
-
-        }
         Refresh();
 
     }
@@ -865,8 +858,8 @@ public class ShipsController  {
     @FXML
     void StartBattle() {
 
-        if(tempShipNumberList.size() < 4){
-            FeedbackString = "Vyberte velikost lode a kliknete na políčko modré desky";
+        if (tempShipNumberList.size() < 4) {
+            FeedbackString = "Vyberte velikost lodě a kliknete na políčko modré desky";
             Refresh();
             return;
         }
@@ -879,7 +872,7 @@ public class ShipsController  {
 
         System.out.println(nepostaveneLode);
         if (nepostaveneLode != 0) {
-            FeedbackString = "Muséte postavit všechny lodě";
+            FeedbackString = "Musíte postavit všechny lodě na desku";
             Refresh();
             return;
         }
@@ -955,43 +948,39 @@ public class ShipsController  {
         if (tryAgain) {
             return;
         }
-        statsArr.set(4,statsArr.get(4)+1);
-        System.out.println(statsArr);
-
+        statsArr.set(4, statsArr.get(4) + 1);
 
         //WIN CHECK
-        if(result != 0)
-        {
+        if (result != 0) {
             System.out.println(result);
             enemyGrid.setDisable(true);
             ToStats();
             return;
         }
 
-
         //AI TURN
         AIon = true;
         tryAgain = true;
         while (tryAgain) {
+            SwitchTemp(false);
             BotAlgorithm.BotAttack();
+            SwitchTemp(true);
             ShootShip();
         }
 
         //SET TO DEFAULT
         AIon = false;
-        statsArr.set(4,statsArr.get(4)+1);
+        statsArr.set(4, statsArr.get(4) + 1);
         System.out.println(statsArr);
 
 
         //WIN CHECK
-        if(result != 0)
-        {
+        if (result != 0) {
             System.out.println(result);
             ToStats();
             enemyGrid.setDisable(true);
         }
     }
-
 
 
     public static Boolean ContainsThisCoords(ArrayList<coordinates> coordsArray, coordinates finding) {
@@ -1012,19 +1001,8 @@ public class ShipsController  {
     }
 
 
-    //TODO test znicit
-    @FXML
-    public void Test() {
-        for (int i = 0; i < 57412; i++) {
-            RandomBuild();
-            ClearBoard();
-        }
-    }
-
-
-    public void CloseApp()
-    {
-       System.exit(0);
+    public void CloseApp() {
+        System.exit(0);
     }
 
 }

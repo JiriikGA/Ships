@@ -24,7 +24,7 @@ public class ShipBuilder extends ShipsController {
 
         if (tempShipNumberList.get(shipLength - 1) == 0) {
             error = 1;
-            FeedbackString = "Použity veškeré lodě tohoto typu";
+            FeedbackString = "Byly použity veškeré lodě tohoto typu";
             return;
         }
 
@@ -33,7 +33,7 @@ public class ShipBuilder extends ShipsController {
         if (rotated) {
             if (currentCoordinates.x + shipLength > row) {
                 //System.out.println("Lod nelze polozit mimo hraci desku");
-                FeedbackString = "Lod nelze polozit mimo hraci desku";
+                FeedbackString = "Loď nelze položit mimo hrací desku";
                 error = 2;
                 return;
             } else {
@@ -44,7 +44,7 @@ public class ShipBuilder extends ShipsController {
                         if (tempBlockedList.get(i).x == currentCoordinates.x + j && tempBlockedList.get(i).y == currentCoordinates.y) {
                             blocked = true;
                             //System.out.println("Lod nelze polozit vedle jinych lodi");
-                            FeedbackString = "Lod nelze polozit vedle jinych lodi";
+                            FeedbackString = "Loď nelze položit hned vedle druhé lodi";
                             error = 3;
                             break;
                         } else {
@@ -62,7 +62,7 @@ public class ShipBuilder extends ShipsController {
         } else {
             if (currentCoordinates.y + shipLength > row) {
                 //System.out.println("mimo pole");
-                FeedbackString = "Lod nelze polozit mimo hraci desku";
+                FeedbackString = "Loď nelze položit mimo hrací desku";
                 error = 2;
                 return;
             } else {
@@ -73,7 +73,7 @@ public class ShipBuilder extends ShipsController {
                         if (tempBlockedList.get(i).x == currentCoordinates.x && tempBlockedList.get(i).y == currentCoordinates.y + j) {
                             blocked = true;
                             //System.out.println("Lod nelze polozit vedle jinych lodi");
-                            FeedbackString = "Lod nelze polozit vedle jinych lodi";
+                            FeedbackString = "Loď nelze položit hned vedle druhé lodi";
                             error = 3;
                             break;
                         } else {

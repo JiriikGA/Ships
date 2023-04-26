@@ -20,10 +20,16 @@ public class BattleHandler extends ShipsController {
         wasHit = false;
 
         if (ContainsThisCoords(tempBlockedList, currentCoordinates)) {
-            FeedbackString = "Nelze znovu strilet na zasazena pole";
+            FeedbackString = "Nelze znovu střílet na zasažená pole";
             return;
         }
         tryAgain = false;
+
+
+
+
+
+
 
         if(AIon){statsArr.set(0,statsArr.get(0)+1);}
         else {statsArr.set(1,statsArr.get(1)+1);}
