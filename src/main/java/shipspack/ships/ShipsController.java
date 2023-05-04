@@ -128,8 +128,6 @@ public class ShipsController {
     @FXML
     private Button BotStratBut;
 
-    //TODO smazat testing
-    ArrayList<Integer> testList = new ArrayList<>();
 
 
     //temp
@@ -157,6 +155,7 @@ public class ShipsController {
     static GridPane tempGrid = new GridPane();
     static coordinates currentCoordinates = new coordinates(-1, -1);
     static String FeedbackString;
+    static ArrayList<coordinates> targets = new ArrayList<>();
     int fullness;
 
     //Values
@@ -183,7 +182,7 @@ public class ShipsController {
 
     static int xOffset = 0;
     static int yOffset = 0;
-    static ArrayList<coordinates> targets = new ArrayList<>();
+
 
     static int botStratInt = 0;
 
@@ -594,7 +593,6 @@ public class ShipsController {
             }
         }
 
-
         enemyGrid.setDisable(true);
         Start();
     }
@@ -644,9 +642,9 @@ public class ShipsController {
         RotateButton.setText("");
         rotated = !rotated;
         if (rotated) {
-            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 0; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-color:  #70d1ef ");
         } else
-            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center ");
+            RotateButton.setStyle("-fx-background-image: url('rotateShip.png'); -fx-background-size: contain; -fx-rotate: 90; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-color:  #70d1ef ");
 
 
     }
@@ -655,7 +653,6 @@ public class ShipsController {
     public void SelectShip(ActionEvent event) {
         Button sourceButton = (Button) event.getSource();
         char number = sourceButton.getId().charAt(6);
-        firstStart();/////////////////////////////////////////TODO initialize button
         shipLength = Character.getNumericValue(number);
     }
 
@@ -736,7 +733,6 @@ public class ShipsController {
         }
         FeedbackString = "";
     }
-
 
     @FXML
     public void ClearBoard() {
@@ -984,7 +980,6 @@ public class ShipsController {
 
 
     public static Boolean ContainsThisCoords(ArrayList<coordinates> coordsArray, coordinates finding) {
-        //System.out.println("checking coordinates " + finding);
         for (shipspack.ships.coordinates coordinates : coordsArray) {
             if (finding.x == coordinates.x && finding.y == coordinates.y) {
                 return true;
